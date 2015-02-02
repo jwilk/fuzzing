@@ -1,3 +1,5 @@
+Disable CRC checks.
+
 --- a/arcunp.c
 +++ b/arcunp.c
 @@ -131,6 +131,7 @@

@@ -1,3 +1,5 @@
+Disable slow, non-essential parts of unace.
+
 --- a/source/apps/exe/extern/error/error.c
 +++ b/source/apps/exe/extern/error/error.c
 @@ -12,7 +12,7 @@

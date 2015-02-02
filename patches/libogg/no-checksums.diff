@@ -1,3 +1,5 @@
+Disable checksum tests.
+
 --- a/src/framing.c
 +++ b/src/framing.c
 @@ -23,6 +23,7 @@

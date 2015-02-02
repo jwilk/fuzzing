@@ -1,3 +1,6 @@
+Turn mutt(1) into non-interactive program,
+well fit for fuzzing.
+
 afl-fuzz [options] -- /path/to/mutt -R -f @@ -e 'set mailcap_path='
 
 --- a/main.c

@@ -1,3 +1,5 @@
+Disable CRC checks.
+
 --- a/bzlib.c
 +++ b/bzlib.c
 @@ -827,8 +827,10 @@
