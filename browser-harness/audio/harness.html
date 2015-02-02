@@ -1,0 +1,47 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<script type="application/javascript">
+
+var playlist = [];
+
+function run_harness() {
+    var http = new XMLHttpRequest();
+    http.open("GET", "playlist", true);
+    http.responseType = "text";
+    http.onreadystatechange = function () {
+        if (http.readyState == http.DONE) {
+            Array.prototype.push.apply(playlist,
+                http.responseText.match(/[^\n]+/g)
+            )
+            set_audio(0);
+        }
+    }
+    http.send(null)
+}
+
+function set_audio(i) {
+    var path = playlist[i];
+    document.getElementById("path").textContent = path;
+    audio = new Audio()
+    if (! path) {
+        return;
+    }
+    next_audio = function() {
+        set_audio(i + 1);
+    }
+    audio.addEventListener("abort", next_audio, true);
+    audio.addEventListener("error", next_audio, true);
+    audio.addEventListener("pause", next_audio, true);
+    audio.src = path + "#t=0,1";
+    audio.play();
+}
+
+</script>
+</head>
+<body onload="run_harness()">
+<div>Now playing: <code id="path"></code></div>
+</body>
+</html>
+
+<!-- vim:set ts=4 sts=4 sw=4 et: -->
