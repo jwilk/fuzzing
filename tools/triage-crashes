@@ -28,7 +28,6 @@ import shlex
 import subprocess as ipc
 
 def run_gdb(options, path):
-    path = os.path.join(options.i, path)
     if '@@' in options.arguments:
         target_args = ' '.join(
             map(shlex.quote, (
@@ -56,7 +55,7 @@ def run_gdb(options, path):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('-i', metavar='<input-dir>', required=True)
+    ap.add_argument('-i', metavar='<input-file>', nargs='+', required=True)
     ap.add_argument('-m', type=int, default=100, metavar='<n>')
     ap.add_argument('command', metavar='<command>')
     ap.add_argument('arguments', nargs='*', metavar='<argument>')
@@ -64,7 +63,7 @@ def main():
     mem_limit = options.m << 20
     resource.setrlimit(resource.RLIMIT_AS, [mem_limit, mem_limit])
     crashdata=  collections.defaultdict(set)
-    for path in sorted(os.listdir(options.i)):
+    for path in options.i:
         [stdout, stderr] = run_gdb(options, path)
         crashdata[(stdout, stderr)].add(path)
     for (stdout, stderr), paths in sorted(crashdata.items()):
