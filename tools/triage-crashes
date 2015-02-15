@@ -1,0 +1,81 @@
+#!/usr/bin/python3
+
+# Copyright © 2015 Jakub Wilk <jwilk@jwilk.net>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the “Software”), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+import argparse
+import collections
+import os
+import resource
+import shlex
+import subprocess as ipc
+
+def run_gdb(options, path):
+    path = os.path.join(options.i, path)
+    if '@@' in options.arguments:
+        target_args = ' '.join(
+            map(shlex.quote, (
+                x if x != '@@' else path
+                for x in options.arguments
+            ))
+        )
+        gdb_run_command = 'run ' + target_args
+    else:
+        target_args = ' '.join(
+            map(shlex.quote, options.arguments)
+        )
+        gdb_run_command = 'run {args} < {path}'.format(
+            args=target_args,
+            path=shlex.quote(path)
+        )
+    gdb_cmdline = ['gdb', '--batch', '--quiet',
+        '--ex', gdb_run_command,
+        '--ex', 'backtrace',
+        options.command
+    ]
+    gdb = ipc.Popen(gdb_cmdline, stdout=ipc.PIPE, stderr=ipc.PIPE)
+    stdout, stderr = gdb.communicate()
+    return stdout.decode(), stderr.decode()
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('-i', metavar='<input-dir>', required=True)
+    ap.add_argument('-m', type=int, default=100, metavar='<n>')
+    ap.add_argument('command', metavar='<command>')
+    ap.add_argument('arguments', nargs='*', metavar='<argument>')
+    options = ap.parse_args()
+    mem_limit = options.m << 20
+    resource.setrlimit(resource.RLIMIT_AS, [mem_limit, mem_limit])
+    crashdata=  collections.defaultdict(set)
+    for path in sorted(os.listdir(options.i)):
+        [stdout, stderr] = run_gdb(options, path)
+        crashdata[(stdout, stderr)].add(path)
+    for (stdout, stderr), paths in sorted(crashdata.items()):
+        print(',\n'.join(sorted(paths)) + ':')
+        for line in stdout.split('\n'):
+            print('|', line)
+        for line in stderr.split('\n'):
+            print('#', line)
+        print()
+
+if __name__ == '__main__':
+    main()
+
+# vim:ts=4 sts=4 sw=4 et
