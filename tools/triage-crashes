@@ -53,7 +53,10 @@ def run_gdb(options, path):
     ]
     gdb = ipc.Popen(gdb_cmdline, stdout=ipc.PIPE, stderr=ipc.PIPE)
     stdout, stderr = gdb.communicate()
-    return stdout.decode(), stderr.decode()
+    return (
+        stdout.decode('ASCII', 'replace'),
+        stderr.decode('ASCII', 'replace'),
+    )
 
 def main():
     ap = argparse.ArgumentParser()
