@@ -1,0 +1,36 @@
+--- a/src/printf.c
++++ b/src/printf.c
+@@ -628,6 +628,33 @@
+   return save_argc - argc;
+ }
+ 
++#undef initialize_main
++void initialize_main(int *argc, char ***argv)
++{
++  static char input[99999];
++  static char * iargv[99999];
++  char *iptr;
++  int iargc;
++  if (*argc >= 2)
++    return;
++  ssize_t n = read(0, input, (sizeof input) - 1);
++  if (n < 0)
++    abort();
++  iargv[0] = (*argv)[0];
++  iargc = 1;
++  iptr = input;
++  while (n > 0)
++    {
++      size_t len = strlen(iptr);
++      iargv[iargc] = iptr;
++      iptr += len + 1;
++      n -= len + 1;
++      iargc++;
++    }
++  *argc = iargc;
++  *argv = iargv;
++}
++
+ int
+ main (int argc, char **argv)
+ {
