@@ -1,0 +1,21 @@
+--- a/unace.c
++++ b/unace.c
+@@ -162,8 +162,7 @@
+ 
+                                                 // check header CRC 
+    if (!(crc_ok = head.HEAD_CRC == (crc & 0xffff)) && print_err)
+-      printf("\nError: archive is broken\n");
+-   else
++      fprintf(stderr, "NOTE: checksum mismatch: %08x -> %08x\n", head.HEAD_CRC, crc & 0xffff);
+    switch (head.HEAD_TYPE)              // specific buffer to head conversion
+    {
+       case MAIN_BLK:
+@@ -208,7 +207,7 @@
+ //              do nothing 'cause isn't needed for extraction
+    }
+ 
+-   return crc_ok;
++   return 1;
+ }
+                                 // maximum SFX module size 
+ #define max_sfx_size 65536      // (needed by read_arc_head)
