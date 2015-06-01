@@ -40,6 +40,10 @@ void show_image(void)
   }
 }
 
+#ifdef __AFL_HAVE_MANUAL_INIT
+void __afl_manual_init(void);
+#endif
+
 int main(int argc, char** argv)
 {
   FT_Library library;
@@ -65,6 +69,9 @@ int main(int argc, char** argv)
   error = FT_Init_FreeType(&library);
   if (error)
     exit(1);
+#ifdef __AFL_HAVE_MANUAL_INIT
+  __afl_manual_init();
+#endif
   error = FT_New_Face(library, filename, 0, &face);
   if (error)
     exit(1);
