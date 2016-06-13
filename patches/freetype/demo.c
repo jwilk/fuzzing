@@ -1,7 +1,7 @@
 /* This is a small test program for FreeType,
  * which can be used as a fuzzing target.
  * It was adapted from:
- * http://www.freetype.org/freetype2/docs/tutorial/example1.c
+ * https://www.freetype.org/freetype2/docs/tutorial/example1.c
  */
 
 #include <stdio.h>
