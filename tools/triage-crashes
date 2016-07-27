@@ -67,7 +67,7 @@ def main():
     options = ap.parse_args()
     mem_limit = options.m << 20
     resource.setrlimit(resource.RLIMIT_AS, [mem_limit, mem_limit])
-    crashdata=  collections.defaultdict(set)
+    crashdata = collections.defaultdict(set)
     for path in options.i:
         [stdout, stderr] = run_gdb(options, path)
         crashdata[(stdout, stderr)].add(path)
