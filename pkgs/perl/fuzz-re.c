@@ -27,8 +27,8 @@ static void print_perl_string(const char *s)
     putchar('"');
     for (; *s; s++) {
         unsigned char c = *s;
-        if (c == '"')
-            printf("\\\"");
+        if (c == '"' || c == '\\')
+            printf("\\%c", c);
         else if (c < ' ' || c >= 0x7FU)
             printf("\\x%02x", c);
         else
