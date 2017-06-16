@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Copyright © 2017 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
 if [ $# -le 2 ]
 then
     printf '%s: <syncdir> <testcase>...\n' "$0"
