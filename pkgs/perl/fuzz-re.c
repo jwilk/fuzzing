@@ -79,7 +79,9 @@ int main(int argc, char **argv, char **env)
         SV* v = eval_pv(code, FALSE);
         SvIV(v);
     }
-    _exit(0); /* XXX */
+#ifdef __AFL_HAVE_MANUAL_CONTROL
+    _exit(0);
+#endif
     perl_destruct(my_perl);
     perl_free(my_perl);
     PERL_SYS_TERM();
