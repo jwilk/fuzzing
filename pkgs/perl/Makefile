@@ -3,9 +3,9 @@
 CFLAGS = -Wall -O2 -g $(shell perl -MExtUtils::Embed -e ccopts)
 LDLIBS = $(shell perl -MExtUtils::Embed -e ldopts)
 
-all: pfuzz
+all: fuzz-re
 
 clean:
-	rm -f pfuzz
+	rm -f fuzz-re
 
 # vim:ts=4 sts=4 sw=4 noet
