@@ -169,6 +169,14 @@ int main(int argc, char **argv, char **env)
     perl_construct(my_perl);
     perl_parse(my_perl, xs_init, 3, fuzzy_argv, NULL);
     PL_exit_flags |= PERL_EXIT_DESTRUCT_END;
+    {
+        size_t i;
+        for (i = 0; i < sizeof(encodings) / sizeof(encodings[0]); i++) {
+            char *encoding = encodings[i];
+            char *args[] = { encoding, "", NULL };
+            call_argv("decode", G_DISCARD, args);
+        }
+    }
 #ifdef __AFL_HAVE_MANUAL_CONTROL
     __AFL_INIT();
 #endif
