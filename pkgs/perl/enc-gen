@@ -1,0 +1,46 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use List::Util qw(shuffle);
+use Data::Dumper;
+use Encode qw();
+
+my @unicode = map { chr } (0x0080 .. 0xFFFB);
+my @ascii = map { chr } (0x20 .. 0x7E, 0x01 .. 0x1F, 0x7F, 0);
+
+if (@ARGV != 1) {
+    die "usage: $0 <dir>";
+}
+
+my ($dir) = @ARGV;
+
+my $i = 0;
+for my $encoding (Encode->encodings(":all")) {
+    my @my_unicode = reverse(@ascii);
+    push @my_unicode, shuffle(@unicode);
+    my $n = 0;
+    my $s = '';
+    while (defined(my $uchar = pop @my_unicode) and $n < 10) {
+        my $ok = eval {
+            Encode::encode($encoding, "$uchar", Encode::FB_CROAK());
+            1;
+        };
+        if ($ok) {
+            $s = "$s$uchar";
+            $n++;
+        }
+    }
+    if ($n == 10 or $encoding eq 'null') {
+        open(my $fh, '>', "$dir/$encoding");
+        print $fh pack('C', $i);
+        print $fh Encode::encode($encoding, "$s");
+        close($fh);
+    } else {
+        die "bad encoding $encoding";
+    }
+    $i += 1;
+}
+
+# vim:ts=4 sts=4 sw=4 et
