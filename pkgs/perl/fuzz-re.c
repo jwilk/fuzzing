@@ -18,7 +18,7 @@ static const char *make_code(uint16_t iflags)
             strcat(re_flags, buf);
         }
     }
-    sprintf(buffer, "$text =~ qr/$pat/%s", re_flags);
+    sprintf(buffer, "$text =~ s/$pat/$repl/%s", re_flags);
     return buffer;
 }
 
@@ -43,8 +43,8 @@ int main(int argc, char **argv, char **env)
         "",
         "-E",
         "use strict; use warnings;" \
-        "our ($text, $pat);" \
-            "sub v($) { ($text, $pat) = @_; };" \
+        "our ($text, $pat, $repl);" \
+            "sub v($) { ($text, $pat, $repl) = @_; };" \
             "0;",
         NULL,
     };
@@ -60,19 +60,22 @@ int main(int argc, char **argv, char **env)
     {
         char buf[99999];
         memset(buf, 0, sizeof buf);
-        int rc = read(STDIN_FILENO, buf, (sizeof buf) - 3);
+        int rc = read(STDIN_FILENO, buf, (sizeof buf) - 4);
         if (rc < 0)
             abort();
         uint16_t iflags = *((uint16_t*)buf);
         const char *code = make_code(iflags);
         char *text = buf + 2;
         char *pat = text + strlen(text) + 1;
-        char *args[] = { text, pat, NULL };
+        char *repl = pat + strlen(pat) + 1;
+        char *args[] = { text, pat, repl, NULL };
         if (verbose) {
             printf("$text = ");
             print_perl_string(text);
             printf(";\n$pat = ");
             print_perl_string(pat);
+            printf(";\n$repl = ");
+            print_perl_string(repl);
             printf(";\n%s;\n", code);
         }
         call_argv("v", G_DISCARD, args);
