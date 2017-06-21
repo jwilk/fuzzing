@@ -1,3 +1,4 @@
+CC = afl-clang-fast
 CFLAGS = -Wall -O2 -g $(shell perl -MExtUtils::Embed -e ccopts)
 LDLIBS = $(shell perl -MExtUtils::Embed -e ldopts)
 
