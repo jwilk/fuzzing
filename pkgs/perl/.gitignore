@@ -1,2 +1,4 @@
 fuzz-enc
+fuzz-enc.asan
 fuzz-re
+fuzz-re.asan
