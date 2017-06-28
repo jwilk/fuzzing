@@ -1,6 +1,7 @@
 CC = afl-clang-fast
-CFLAGS = -Wall -O2 -g $(shell perl -MExtUtils::Embed -e ccopts)
-LDLIBS = $(shell perl -MExtUtils::Embed -e ldopts)
+PERL = perl
+CFLAGS = -Wall -O2 -g $(shell $(PERL) -MExtUtils::Embed -e ccopts)
+LDLIBS = $(shell $(PERL) -MExtUtils::Embed -e ldopts)
 
 _suffix = $(and $(AFL_USE_ASAN),.asan)
 _progs = fuzz-enc fuzz-re
