@@ -7,7 +7,6 @@ static PerlInterpreter *my_perl;
 
 static const char *make_code(uint16_t iflags)
 {
-    static char buffer[99];
     const char* all_flags[] = {
         "m",
         "s",
@@ -24,6 +23,7 @@ static const char *make_code(uint16_t iflags)
         "r"
     };
     char re_flags[1 + 2 * asizeof(all_flags)] = "";
+    static char buffer[23 + 2 * asizeof(all_flags)];
     unsigned int i;
     for (i = 0; i < asizeof(all_flags); i++) {
         uint16_t bitmask = (1U << i);
