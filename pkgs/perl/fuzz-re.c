@@ -3,20 +3,32 @@
 
 static PerlInterpreter *my_perl;
 
+#define asizeof(a) (sizeof a / sizeof a[0])
+
 static const char *make_code(uint16_t iflags)
 {
     static char buffer[99];
-    const char all_flags[] = "msixpaludn";
-    char re_flags[sizeof(all_flags)] = "";
+    const char* all_flags[] = {
+        "m",
+        "s",
+        "i",
+        "x",
+        "p",
+        "a",
+        "l",
+        "u",
+        "d",
+        "n",
+        "xx",
+        "aa",
+        "r"
+    };
+    char re_flags[1 + 2 * asizeof(all_flags)] = "";
     unsigned int i;
-    for (i = 0; i < (sizeof all_flags) - 1; i++) {
+    for (i = 0; i < asizeof(all_flags); i++) {
         uint16_t bitmask = (1U << i);
-        if (iflags & bitmask) {
-            char buf[2];
-            buf[0] = all_flags[i];
-            buf[1] = '\0';
-            strcat(re_flags, buf);
-        }
+        if (iflags & bitmask)
+            strcat(re_flags, all_flags[i]);
     }
     sprintf(buffer, "$text =~ s/$pat/$repl/%s", re_flags);
     return buffer;
