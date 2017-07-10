@@ -1,0 +1,13 @@
+Let bzip2recover overwrite files.
+
+--- a/bzip2recover.c
++++ b/bzip2recover.c
+@@ -278,7 +278,7 @@ FILE* fopen_output( Char* name, const char* mode )
+   FILE *fp;
+   int   fh;
+    
+-  fh = open(name, O_WRONLY|O_CREAT|O_EXCL, 0600);
++  fh = open(name, O_WRONLY|O_CREAT|O_TRUNC, 0600);
+   if (fh == -1) return NULL;
+   fp = fdopen(fh, mode);
+   if (fp == NULL) close(fh);
