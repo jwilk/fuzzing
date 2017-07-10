@@ -1,0 +1,13 @@
+--- a/bzip2.c
++++ b/bzip2.c
+@@ -1958,6 +1958,10 @@ IntNative main ( IntNative argc, Char *argv[] )
+ #     endif
+    }
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++  __AFL_INIT();
++#endif
++
+    if (opMode == OM_Z) {
+      if (srcMode == SM_I2O) {
+         compress ( NULL );
