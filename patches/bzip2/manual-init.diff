@@ -11,3 +11,16 @@
     if (opMode == OM_Z) {
       if (srcMode == SM_I2O) {
          compress ( NULL );
+--- a/bzip2recover.c
++++ b/bzip2recover.c
+@@ -363,6 +363,10 @@ Int32 main ( Int32 argc, Char** argv )
+ 
+    strcpy ( inFileName, argv[1] );
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++  __AFL_INIT();
++#endif
++
+    inFile = fopen ( inFileName, "rb" );
+    if (inFile == NULL) {
+       fprintf ( stderr, "%s: can't read `%s'\n", progName, inFileName );
