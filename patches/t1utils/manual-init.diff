@@ -1,0 +1,13 @@
+--- a/t1disasm.c
++++ b/t1disasm.c
+@@ -724,6 +724,10 @@ particular purpose.\n");
+   fr.output_binary = disasm_output_binary;
+   fr.output_end = disasm_output_end;
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++  __AFL_INIT();
++#endif
++
+   /* peek at first byte to see if it is the PFB marker 0x80 */
+   c = getc(ifp);
+   ungetc(c, ifp);
