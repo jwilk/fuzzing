@@ -1,0 +1,13 @@
+--- a/src/date.c
++++ b/src/date.c
+@@ -503,6 +503,10 @@
+ 
+   timezone_t tz = tzalloc (getenv ("TZ"));
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++  __AFL_INIT();
++#endif
++
+   if (batch_file != NULL)
+     ok = batch_convert (batch_file, format, tz);
+   else
