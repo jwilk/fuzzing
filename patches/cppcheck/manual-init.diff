@@ -1,0 +1,13 @@
+--- a/cli/cppcheckexecutor.cpp
++++ b/cli/cppcheckexecutor.cpp
+@@ -802,6 +802,10 @@ int CppCheckExecutor::check_internal(Cpp
+         reportErr(ErrorLogger::ErrorMessage::getXMLHeader(settings.xml_version));
+     }
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++  __AFL_INIT();
++#endif
++
+     unsigned int returnValue = 0;
+     if (settings.jobs == 1) {
+         // Single process
