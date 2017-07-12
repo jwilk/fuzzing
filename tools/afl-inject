@@ -5,7 +5,7 @@
 
 if [ $# -lt 2 ]
 then
-    printf '%s <syncdir> <testcase>...\n' "$0"
+    printf '%s <syncdir> <testcase>...\n' "$0" >&2
     exit 1
 fi
 
