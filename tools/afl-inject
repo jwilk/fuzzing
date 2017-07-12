@@ -25,7 +25,6 @@ shift $((OPTIND-1))
 queue="$syncdir/inject/queue"
 mkdir -p "$queue"
 i=$(cd "$queue" && ls id:* | sed -e 's/id:0*\([0-9]\+\).*/\1/;' | sort -n | tail -n1)
-echo ">> $i"
 i=$((i + 1))
 for file in "$@"
 do
