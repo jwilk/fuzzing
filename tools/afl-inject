@@ -3,16 +3,25 @@
 # Copyright © 2017 Jakub Wilk <jwilk@jwilk.net>
 # SPDX-License-Identifier: MIT
 
-if [ $# -lt 2 ]
-then
-    printf '%s <syncdir> <testcase>...\n' "$0" >&2
-    exit 1
-fi
-
 set -e -u
 
-syncdir="$1"
-shift
+usage()
+{
+    printf '%s -o <syncdir> <testcase>...\n' "$0" >&2
+    exit 1
+}
+
+syncdir=
+while getopts "o:" opt
+do
+    case "$opt" in
+        o) syncdir="$OPTARG";;
+        *) exit 1;;
+    esac
+done
+shift $((OPTIND-1))
+[ $# -ne 0 ] || usage
+
 queue="$syncdir/inject/queue"
 mkdir -p "$queue"
 i=$(cd "$queue" && ls id:* | sed -e 's/id:0*\([0-9]\+\).*/\1/;' | sort -n | tail -n1)
