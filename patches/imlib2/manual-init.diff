@@ -1,0 +1,56 @@
+--- a/src/bin/imlib2_conv.c
++++ b/src/bin/imlib2_conv.c
+@@ -17,12 +17,20 @@
+ 
+ static void         usage(int exit_status);
+ 
++extern void __imlib_RescanLoaders(void);
++
+ int
+ main(int argc, char **argv)
+ {
+    char               *dot, *colon, *n, *oldn;
+    Imlib_Image         im;
+ 
++   __imlib_RescanLoaders();
++
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++   __AFL_INIT();
++#endif
++
+    /* I'm just plain being lazy here.. get our basename. */
+    for (oldn = n = argv[0]; n; oldn = n)
+       n = strchr(++oldn, '/');
+--- a/src/lib/image.c
++++ b/src/lib/image.c
+@@ -713,7 +713,7 @@
+    free(l);
+ }
+ 
+-void
++__EXPORT__ void
+ __imlib_RescanLoaders(void)
+ {
+    static time_t       last_scan_time = 0;
+@@ -1003,8 +1003,10 @@
+         im->key = __imlib_FileKey(file);
+      }
+    im->moddate = __imlib_FileModDate(file);
++#if 0
+    /* ok - just check all our loaders are up to date */
+    __imlib_RescanLoaders();
++#endif
+    /* take a guess by extension on the best loader to use */
+    best_loader = __imlib_FindBestLoaderForFile(im->real_file, 0);
+    errno = 0;
+@@ -1237,8 +1239,10 @@
+            *er = IMLIB_LOAD_ERROR_FILE_DOES_NOT_EXIST;
+         return;
+      }
++#if 0
+    /* ok - just check all our loaders are up to date */
+    __imlib_RescanLoaders();
++#endif
+    /* set the filename to the saved one */
+    pfile = im->file;
+    im->file = strdup(file);
