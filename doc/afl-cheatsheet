@@ -1,33 +1,33 @@
 Env variables::
 
-    AFL_HARDEN=1
-    AFL_IMPORT_FIRST=1
-    AFL_NO_CPU_RED=1
-    AFL_SKIP_CPUFREQ=1
+   AFL_HARDEN=1
+   AFL_IMPORT_FIRST=1
+   AFL_NO_CPU_RED=1
+   AFL_SKIP_CPUFREQ=1
 
 LLVM mode::
 
-    #ifdef __AFL_HAVE_MANUAL_CONTROL
-    __AFL_INIT();
-    #endif
+   #ifdef __AFL_HAVE_MANUAL_CONTROL
+   __AFL_INIT();
+   #endif
 
 LLVM persistent mode::
 
-    while (__AFL_LOOP(1000)) {
-        ...
-    }
+   while (__AFL_LOOP(1000)) {
+       ...
+   }
 
 ASan::
 
-    env -u AFL_HARDEN AFL_USE_ASAN=1
-    ASAN_OPTIONS=abort_on_error=1:allocator_may_return_null=1
+   env -u AFL_HARDEN AFL_USE_ASAN=1
+   ASAN_OPTIONS=abort_on_error=1:allocator_may_return_null=1
 
 UBSan::
 
-    UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_stacktrace=1
+   UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_stacktrace=1
 
 Valgrind + afl-tmin/afl-cmin::
 
-    valgrind --quiet --error-exitcode=86 ...
+   valgrind --quiet --error-exitcode=86 ...
 
-.. vim:ft=rst 
+.. vim:ts=4 sts=3 sw=3 et ft=rst
