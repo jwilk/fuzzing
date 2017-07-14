@@ -22,6 +22,7 @@ done
 shift $((OPTIND-1))
 [ $# -ne 0 ] || usage
 
+ls -d "$syncdir/" > /dev/null
 queue="$syncdir/inject/queue"
 mkdir -p "$queue"
 i=$(cd "$queue" && ls id:* | sed -e 's/id:0*\([0-9]\+\).*/\1/;' | sort -n | tail -n1)
