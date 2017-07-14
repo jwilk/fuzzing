@@ -17,6 +17,16 @@ LLVM persistent mode::
        ...
    }
 
+Compiler defs::
+
+    #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+    ...
+    #endif
+
+    #ifdef __AFL_COMPILER
+    ...
+    #endif
+
 ASan::
 
    env -u AFL_HARDEN AFL_USE_ASAN=1
