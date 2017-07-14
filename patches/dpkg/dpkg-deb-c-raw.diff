@@ -1,0 +1,25 @@
+Make “dpkg-deb -c” extract raw member on stdout.
+
+--- a/dpkg-deb/extract.c
++++ b/dpkg-deb/extract.c
+@@ -272,6 +272,11 @@
+     ohshit(_("'%.255s' is not a debian format archive"), debar);
+   }
+ 
++#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
++  if (fd_fd_copy(ar->fd, STDOUT_FILENO, memberlen, &err) < 0)
++    ohshit(_("cannot copy archive member from '%s' to decompressor pipe: %s"),
++           ar->name, err.str);
++#else
+   m_pipe(p1);
+   c1 = subproc_fork();
+   if (!c1) {
+@@ -356,6 +361,7 @@
+   subproc_reap(c2, _("<decompress>"), SUBPROC_NOPIPE);
+   if (c1 != -1)
+     subproc_reap(c1, _("paste"), 0);
++#endif
+   if (version.major == 0 && admininfo) {
+     /* Handle the version as a float to preserve the behaviour of old code,
+      * because even if the format is defined to be padded by 0's that might
+

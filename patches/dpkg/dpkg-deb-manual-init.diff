@@ -1,0 +1,13 @@
+--- a/dpkg-deb/main.c
++++ b/dpkg-deb/main.c
+@@ -245,6 +245,10 @@
+     badusage(_("unsupported compression type '%s' with uniform compression"),
+              compressor_get_name(compress_params.type));
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++   __AFL_INIT();
++#endif
++
+   ret = cipaction->action(argv);
+ 
+   dpkg_program_done();
