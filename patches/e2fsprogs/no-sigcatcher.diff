@@ -1,0 +1,19 @@
+--- a/e2fsck/sigcatcher.c
++++ b/e2fsck/sigcatcher.c
+@@ -385,6 +385,7 @@
+ 
+ void sigcatcher_setup(void)
+ {
++#if 0
+ 	struct sigaction	sa;
+ 	
+ 	memset(&sa, 0, sizeof(struct sigaction));
+@@ -396,6 +397,7 @@
+ 	sigaction(SIGBUS, &sa, 0);
+ 	sigaction(SIGSEGV, &sa, 0);
+ 	sigaction(SIGABRT, &sa, 0);
++#endif
+ }	
+ 
+ 
+
