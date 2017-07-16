@@ -7,7 +7,7 @@ set -e -u
 
 usage()
 {
-    printf '%s -i <indir> -O <syncdir> -S <ident>\n' "$0" >&2
+    printf '%s -i <indir> -o <syncdir> -S <ident>\n' "$0" >&2
     exit 1
 }
 
