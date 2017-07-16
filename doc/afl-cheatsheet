@@ -35,6 +35,8 @@ ASan::
 UBSan::
 
    UBSAN_OPTIONS=halt_on_error=1:abort_on_error=1:print_stacktrace=1
+   afl-clang-fast -rtlib=compiler-rt -print-libgcc-file-name
+   afl-clang-fast -rtlib=compiler-rt -v /dev/null 2>&1 | xargs -n1 | grep /libclang_rt.builtins- | head -n1
 
 Valgrind + afl-tmin/afl-cmin::
 
