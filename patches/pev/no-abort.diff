@@ -1,0 +1,90 @@
+--- a/src/output.c
++++ b/src/output.c
+@@ -128,7 +128,7 @@
+ 	g_format = _lookup_format_by_id(FORMAT_ID_FOR_TEXT);
+ 	g_scope_stack = STACK_ALLOC(15);
+ 	if (g_scope_stack == NULL)
+-		abort();
++		exit(1);
+ }
+ 
+ void output_term(void) {
+@@ -163,7 +163,7 @@
+ 	g_cmdline = utils_str_array_join(g_argv, g_argc, ' ');
+ 	if (g_cmdline == NULL) {
+ 		fprintf(stderr, "output: allocation failed for utils_str_array_join\n");
+-		abort();
++		exit(1);
+ 	}
+ 	//printf("cmdline = %s\n", g_cmdline);
+ }
+@@ -259,12 +259,12 @@
+ 	int ret = STACK_PEEK(g_scope_stack, (void *)&scope);
+ 	if (ret < 0) {
+ 		fprintf(stderr, "output: cannot close a scope that has not been opened.\n");
+-		abort();
++		exit(1);
+ 	}
+ 
+ 	if (scope->type != OUTPUT_SCOPE_TYPE_DOCUMENT) {
+ 		fprintf(stderr, "output: trying to close a document, but the current scope is of a different type.\n");
+-		abort();
++		exit(1);
+ 	}
+ 
+ 	output_close_scope();
+@@ -281,14 +281,14 @@
+ 
+ 	output_scope_t * const scope = malloc(sizeof *scope);
+ 	if (scope == NULL)
+-		abort(); // Abort because it failed miserably!
++		exit(1); // Abort because it failed miserably!
+ 
+ 	scope->name = scope_name == NULL ? NULL : strdup(scope_name);
+ 	scope->type = scope_type;
+ 	scope->depth = scope_depth + 1;
+ 
+ 	if (scope_depth > 0) {
+-		output_scope_t * const parent_scope = NULL;
++		output_scope_t * parent_scope = NULL;
+ 		STACK_PEEK(g_scope_stack, (void *)&parent_scope);
+ 		scope->parent_type = parent_scope->type;
+ 	}
+@@ -299,7 +299,7 @@
+ 
+ 	int ret = STACK_PUSH(g_scope_stack, (void *)scope);
+ 	if (ret < 0)
+-		abort(); // Abort because it failed miserably!
++		exit(1); // Abort because it failed miserably!
+ }
+ 
+ void output_close_scope(void) {
+@@ -309,7 +309,7 @@
+ 	int ret = STACK_POP(g_scope_stack, (void *)&scope);
+ 	if (ret < 0) {
+ 		fprintf(stderr, "output: cannot close a scope that has not been opened.\n");
+-		abort();
++		exit(1);
+ 	}
+ 
+ 	const char *key = NULL;
+--- a/src/output_plugin.c
++++ b/src/output_plugin.c
+@@ -91,7 +91,7 @@
+ 
+ 	char *new_str = malloc(new_length + 1); // Extra byte for NULL terminator
+ 	if (new_str == NULL)
+-		abort();
++		exit(1);
+ 
+ 	new_str[0] = '"';
+ 	new_str[new_length - 1] = '"';
+@@ -131,7 +131,7 @@
+ 
+ 	char *new_str = malloc(new_length + 1); // Extra byte for NULL terminator
+ 	if (new_str == NULL)
+-		abort();
++		exit(1);
+ 
+ 	new_str[new_length] = '\0';
+ 

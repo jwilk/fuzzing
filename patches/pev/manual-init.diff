@@ -1,0 +1,91 @@
+--- a/src/pedis.c
++++ b/src/pedis.c
+@@ -314,6 +314,10 @@
+ 	const char *path = argv[argc-1];
+ 	pe_ctx_t ctx;
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++	__AFL_INIT();
++#endif
++
+ 	pe_err_e err = pe_load_file(&ctx, path);
+ 	if (err != LIBPE_E_OK) {
+ 		pe_error_print(stderr, err);
+--- a/src/pehash.c
++++ b/src/pehash.c
+@@ -527,6 +527,10 @@
+ 
+ 	pe_ctx_t ctx;
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++	__AFL_INIT();
++#endif
++
+ 	pe_err_e err = pe_load_file(&ctx, argv[argc-1]);
+ 	if (err != LIBPE_E_OK) {
+ 		pe_error_print(stderr, err);
+--- a/src/pepack.c
++++ b/src/pepack.c
+@@ -264,6 +264,10 @@
+ 	const char *path = argv[argc-1];
+ 	pe_ctx_t ctx;
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++	__AFL_INIT();
++#endif
++
+ 	pe_err_e err = pe_load_file(&ctx, path);
+ 	if (err != LIBPE_E_OK) {
+ 		pe_error_print(stderr, err);
+--- a/src/peres.c
++++ b/src/peres.c
+@@ -776,6 +776,10 @@
+ 	const char *path = argv[argc-1];
+ 	pe_ctx_t ctx;
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++	__AFL_INIT();
++#endif
++
+ 	pe_err_e err = pe_load_file(&ctx, path);
+ 	if (err != LIBPE_E_OK) {
+ 		pe_error_print(stderr, err);
+--- a/src/pescan.c
++++ b/src/pescan.c
+@@ -496,6 +496,10 @@
+ 	const char *path = argv[argc-1];
+ 	pe_ctx_t ctx;
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++	__AFL_INIT();
++#endif
++
+ 	pe_err_e err = pe_load_file(&ctx, path);
+ 	if (err != LIBPE_E_OK) {
+ 		pe_error_print(stderr, err);
+--- a/src/pesec.c
++++ b/src/pesec.c
+@@ -423,6 +423,10 @@
+ 	const char *path = argv[argc-1];
+ 	pe_ctx_t ctx;
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++	__AFL_INIT();
++#endif
++
+ 	pe_err_e err = pe_load_file(&ctx, path);
+ 	if (err != LIBPE_E_OK) {
+ 		pe_error_print(stderr, err);
+--- a/src/pestr.c
++++ b/src/pestr.c
+@@ -182,6 +182,10 @@
+ 	const char *path = argv[argc-1];
+ 	pe_ctx_t ctx;
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++	__AFL_INIT();
++#endif
++
+ 	pe_err_e err = pe_load_file(&ctx, path);
+ 	if (err != LIBPE_E_OK) {
+ 		pe_error_print(stderr, err);
