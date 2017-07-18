@@ -1,13 +1,13 @@
 --- a/source/tools/pdfclean.c
 +++ b/source/tools/pdfclean.c
-@@ -78,7 +78,9 @@ int pdfclean_main(int argc, char **argv)
- 		fprintf(stderr, "cannot initialise context\n");
+@@ -79,6 +79,10 @@ int pdfclean_main(int argc, char **argv)
  		exit(1);
  	}
--
+ 
 +#ifdef __AFL_HAVE_MANUAL_CONTROL
 +	__AFL_INIT();
 +#endif
++
  	fz_try(ctx)
  	{
  		pdf_clean_file(ctx, infile, outfile, password, &opts, &argv[fz_optind], argc - fz_optind);
