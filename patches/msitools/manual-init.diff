@@ -1,0 +1,13 @@
+--- a/tools/msiinfo.c
++++ b/tools/msiinfo.c
+@@ -767,6 +767,10 @@
+         usage(stderr);
+     }
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++    __AFL_INIT();
++#endif
++
+     int result = cmd->func(cmd, argc - 1, argv + 1, &error);
+     if (error != NULL) {
+         g_printerr("error: %s\n", error->message);
