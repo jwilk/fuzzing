@@ -1,24 +1,13 @@
 --- a/source/tools/pdfclean.c
 +++ b/source/tools/pdfclean.c
-@@ -249,6 +249,10 @@
- 	}
- }
- 
-+#ifdef __AFL_HAVE_MANUAL_INIT
-+void __afl_manual_init(void);
-+#endif
-+
- int pdfclean_main(int argc, char **argv)
- {
- 	char *infile;
-@@ -301,7 +305,9 @@
+@@ -78,7 +78,9 @@ int pdfclean_main(int argc, char **argv)
  		fprintf(stderr, "cannot initialise context\n");
  		exit(1);
  	}
 -
-+#ifdef __AFL_HAVE_MANUAL_INIT
-+	__afl_manual_init();
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++	__AFL_INIT();
 +#endif
  	fz_try(ctx)
  	{
- 		pdfclean_clean(ctx, infile, outfile, password, &opts, &argv[fz_optind], argc - fz_optind);
+ 		pdf_clean_file(ctx, infile, outfile, password, &opts, &argv[fz_optind], argc - fz_optind);
