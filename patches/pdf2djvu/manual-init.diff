@@ -1,0 +1,13 @@
+--- a/pdf2djvu.cc
++++ b/pdf2djvu.cc
+@@ -1231,6 +1231,10 @@ static int xmain(int argc, char * const argv[])
+   pdf::Environment environment;
+   environment.set_antialias(config.antialias);
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++  __AFL_INIT();
++#endif
++
+   pdf::DocumentMap document_map(config.filenames);
+   intmax_t pdf_byte_size = document_map.get_byte_size();
+ 
