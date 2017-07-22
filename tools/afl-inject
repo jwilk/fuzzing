@@ -21,6 +21,7 @@ do
 done
 shift $((OPTIND-1))
 [ $# -ne 0 ] || usage
+[ -n "$syncdir" ] || usage
 
 ls -d "$syncdir/" > /dev/null
 queue="$syncdir/inject/queue"
