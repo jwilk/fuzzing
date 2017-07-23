@@ -1,0 +1,12 @@
+--- a/tools/ddjvu.cpp
++++ b/tools/ddjvu.cpp
+@@ -1202,6 +1202,9 @@
+   programname = argv[0];
+   if (! (ctx = ddjvu_context_create(programname)))
+     die(i18n("Cannot create djvu context."));
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++   __AFL_INIT();
++#endif
+   if (! (doc = ddjvu_document_create_by_filename(ctx, inputfilename, TRUE)))
+     die(i18n("Cannot open djvu document '%s'."), inputfilename);
+   while (! ddjvu_document_decoding_done(doc))
