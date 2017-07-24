@@ -1,0 +1,12 @@
+--- a/exempi/main.cpp
++++ b/exempi/main.cpp
+@@ -181,6 +181,9 @@
+                                    NULL);
+         }
+     }
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++    __AFL_INIT();
++#endif
+     while (argc) {
+ 
+         process_file(*argv, dont_reconcile, is_an_xmp, write_in_place, dump_xml,
