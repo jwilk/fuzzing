@@ -1,0 +1,13 @@
+--- a/tests/test-parser.c
++++ b/tests/test-parser.c
+@@ -241,6 +241,10 @@
+ 	else
+ 		return 0;
+ 	
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++	__AFL_INIT();
++#endif
++	
+ 	if ((fd = open (filename, O_RDONLY, 0)) == -1)
+ 		return 0;
+ 	

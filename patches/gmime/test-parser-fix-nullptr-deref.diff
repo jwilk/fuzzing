@@ -1,0 +1,11 @@
+--- a/tests/test-parser.c
++++ b/tests/test-parser.c
+@@ -168,6 +168,8 @@
+ 	
+ 	ZenTimerStart (NULL);
+ 	message = g_mime_parser_construct_message (parser, NULL);
++	if (!message)
++		exit(1);
+ 	ZenTimerStop (NULL);
+ 	ZenTimerReport (NULL, "gmime::parser_construct_message");
+ 	
