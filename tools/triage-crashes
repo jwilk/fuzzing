@@ -71,7 +71,8 @@ def main():
         [stdout, stderr] = run_gdb(options, path)
         crashdata[(stdout, stderr)].add(path)
     for (stdout, stderr), paths in sorted(crashdata.items()):
-        print(',\n'.join(sorted(paths)) + ':')
+        for path in sorted(paths):
+            print(path)
         for line in stdout.split('\n'):
             print('|', line)
         for line in stderr.split('\n'):
