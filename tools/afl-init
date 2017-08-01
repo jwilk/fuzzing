@@ -7,19 +7,19 @@ set -e -u
 
 usage()
 {
-    printf '%s -i <indir> -o <syncdir> -S <ident>\n' "$0" >&2
+    printf '%s -i <indir> -o <syncdir> -S <ident> [-S <ident2>...]\n' "$0" >&2
     exit 1
 }
 
 indir=
 syncdir=
-node=
+nodes=
 while getopts "i:o:S:" opt
 do
     case "$opt" in
         i) indir="$OPTARG";;
         o) syncdir="$OPTARG";;
-        S) node="$OPTARG";;
+        S) nodes="$nodes $OPTARG";;
         *) exit 1;;
     esac
 done
@@ -27,21 +27,24 @@ shift $((OPTIND-1))
 [ $# -eq 0 ] || usage
 [ -n "$indir" ] || usage
 [ -n "$syncdir" ] || usage
-[ -n "$node" ] || usage
+[ -n "$nodes" ] || usage
 
-mkdir "$syncdir/$node"
-queue="$syncdir/$node/queue"
-mkdir "$queue"
-i=0
-for file in "$indir/"*
+for node in $nodes
 do
-    tmpfile=$(mktemp -p "$queue" .tmpinject.XXXXX)
-    basename="${file##*/}"
-    name=$(printf 'id:%06d,orig:%s' "$i" "$basename")
-    printf '%s -> %s\n' "$file" "$queue/$name"
-    cat < "$file" > "$tmpfile"
-    mv "$tmpfile" "$queue/$name"
-    i=$((i + 1))
+    mkdir "$syncdir/$node"
+    queue="$syncdir/$node/queue"
+    mkdir "$queue"
+    i=0
+    for file in "$indir/"*
+    do
+        tmpfile=$(mktemp -p "$queue" .tmpinject.XXXXX)
+        basename="${file##*/}"
+        name=$(printf 'id:%06d,orig:%s' "$i" "$basename")
+        printf '%s -> %s\n' "$file" "$queue/$name"
+        cat < "$file" > "$tmpfile"
+        mv "$tmpfile" "$queue/$name"
+        i=$((i + 1))
+    done
 done
 
 # vim:ts=4 sts=4 sw=4 et
