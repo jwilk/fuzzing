@@ -1,0 +1,35 @@
+
+--- a/htcfg.cc
++++ b/htcfg.cc
+@@ -81,6 +81,7 @@
+ 
+ loadstore_result save_systemconfig(String &error_info)
+ {
++#if 0
+ 	try {
+ 		LocalFile f((String)systemconfig_file, IOAM_WRITE, FOM_CREATE);
+ 	
+@@ -117,11 +118,13 @@
+ 		e.reason(error_info);
+ 		return LS_ERROR_WRITE;
+ 	}
++#endif
+ 	return LS_OK;
+ }
+ 
+ bool load_systemconfig(loadstore_result *result, int *error_info)
+ {
++#if 0
+ 	uint8 object_stream_type = 128;
+ 	std::auto_ptr<ObjectStream> d(NULL);
+ 	*error_info = 0;
+@@ -175,7 +178,8 @@
+ 		}
+ 		return false;
+ 	}
+-	*result = LS_OK;
++#endif
++	*result = LS_ERROR_NOT_FOUND;
+ 	return true;
+ }
+ 
