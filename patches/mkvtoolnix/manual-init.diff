@@ -1,0 +1,13 @@
+--- a/src/info/mkvinfo.cpp
++++ b/src/info/mkvinfo.cpp
+@@ -1874,6 +1874,10 @@
+ 
+   init_common_boost_formats();
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++  __AFL_INIT();
++#endif
++
+   if (g_options.m_use_gui)
+     ui_run(argc, argv);
+   else
