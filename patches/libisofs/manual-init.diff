@@ -1,0 +1,13 @@
+--- a/demo/demo.c
++++ b/demo/demo.c
+@@ -513,6 +513,10 @@
+ 
+     iso_set_msgs_severities("NEVER", "ALL", "");
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++    __AFL_INIT();
++#endif
++
+     result = iso_data_source_new_from_file(argv[1], &src);
+     if (result < 0) {
+         demo_report_iso_err(result, "Error creating data source");
