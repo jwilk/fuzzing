@@ -1,0 +1,16 @@
+demo: fix stack overflow caused by infinite recursion.
+
+--- a/demo/demo.c
++++ b/demo/demo.c
+@@ -457,6 +457,11 @@
+     struct stat info;
+     char *sp;
+ 
++    if (level > 99) {
++        printf ("Deep directory structure\n");
++        return;
++    }
++
+     sp = calloc(1, level * 2 + 1);
+ 
+     for (i = 0; i < level * 2; i += 2) {
