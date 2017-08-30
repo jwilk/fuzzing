@@ -1,0 +1,12 @@
+--- a/e2fsck/unix.c
++++ b/e2fsck/unix.c
+@@ -1444,6 +1444,9 @@
+ 	}
+ 
+ 	ctx->openfs_flags = flags;
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++        __AFL_INIT();
++#endif
+ 	retval = try_open_fs(ctx, flags, io_ptr, &fs);
+ 
+ 	if (!ctx->superblock && !(ctx->options & E2F_OPT_PREEN) &&
