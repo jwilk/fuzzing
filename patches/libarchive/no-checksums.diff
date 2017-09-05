@@ -1,0 +1,104 @@
+--- a/libarchive/archive_read_support_filter_lzop.c
++++ b/libarchive/archive_read_support_filter_lzop.c
+@@ -280,7 +280,7 @@
+ 	else
+ 		checksum = adler32(adler32(0, NULL, 0), p, len);
+ 	if (archive_be32dec(p + len) != checksum)
+-		goto corrupted;
++		fprintf(stderr, "NOTE: checksum mismatch: %08x -> %08x\n", checksum, archive_be32dec(p + len));
+ 	__archive_read_filter_consume(self->upstream, len + 4);
+ 	if (flags & EXTRA_FIELD) {
+ 		/* Skip extra field */
+--- a/libarchive/archive_read_support_format_7zip.c
++++ b/libarchive/archive_read_support_format_7zip.c
+@@ -2849,8 +2849,7 @@
+ 	/* CRC check. */
+ 	if (crc32(0, (const unsigned char *)p + 12, 20)
+ 	    != archive_le32dec(p + 8)) {
+-		archive_set_error(&a->archive, -1, "Header CRC error");
+-		return (ARCHIVE_FATAL);
++		fprintf(stderr, "NOTE: checksum mismatch: %08x -> %08x\n", crc32(0, (const unsigned char *)p + 12, 20), archive_le32dec(p + 8));
+ 	}
+ 
+ 	next_header_offset = archive_le64dec(p + 12);
+@@ -2899,9 +2898,7 @@
+ 
+ 		/* Check the EncodedHeader CRC.*/
+ 		if (r == 0 && zip->header_crc32 != next_header_crc) {
+-			archive_set_error(&a->archive, -1,
+-			    "Damaged 7-Zip archive");
+-			r = -1;
++			fprintf(stderr, "NOTE: checksum mismatch: %08x -> %08x\n", zip->header_crc32, next_header_crc);
+ 		}
+ 		if (r == 0) {
+ 			if (zip->si.ci.folders[0].digest_defined)
+@@ -2952,9 +2949,7 @@
+ 
+ 		/* Check the Header CRC.*/
+ 		if (check_header_crc && zip->header_crc32 != next_header_crc) {
+-			archive_set_error(&a->archive, -1,
+-			    "Malformed 7-Zip archive");
+-			return (ARCHIVE_FATAL);
++			fprintf(stderr, "NOTE: checksum mismatch: %08x -> %08x\n", zip->header_crc32, next_header_crc);
+ 		}
+ 		break;
+ 	default:
+--- a/libarchive/archive_read_support_format_lha.c
++++ b/libarchive/archive_read_support_format_lha.c
+@@ -1010,9 +1010,7 @@
+ 	}
+ 
+ 	if (header_crc != lha->header_crc) {
+-		archive_set_error(&a->archive, ARCHIVE_ERRNO_FILE_FORMAT,
+-		    "LHa header CRC error");
+-		return (ARCHIVE_FATAL);
++		fprintf(stderr, "NOTE: checksum mismatch: %04x -> %04x\n", header_crc, lha->header_crc);
+ 	}
+ 	return (err);
+ }
+@@ -1078,9 +1076,7 @@
+ 		return (err);
+ 
+ 	if (header_crc != lha->header_crc) {
+-		archive_set_error(&a->archive, ARCHIVE_ERRNO_FILE_FORMAT,
+-		    "LHa header CRC error");
+-		return (ARCHIVE_FATAL);
++		fprintf(stderr, "NOTE: checksum mismatch: %04x -> %04x\n", header_crc, lha->header_crc);
+ 	}
+ 	return (err);
+ invalid:
+--- a/libarchive/archive_read_support_format_rar.c
++++ b/libarchive/archive_read_support_format_rar.c
+@@ -921,9 +921,7 @@
+ 
+       crc32_val = crc32(0, (const unsigned char *)p + 2, (unsigned)skip - 2);
+       if ((crc32_val & 0xffff) != archive_le16dec(p)) {
+-        archive_set_error(&a->archive, ARCHIVE_ERRNO_FILE_FORMAT,
+-          "Header CRC error");
+-        return (ARCHIVE_FATAL);
++        fprintf(stderr, "NOTE: checksum mismatch: %04x -> %04x\n", archive_le16dec(p), crc32_val & 0xffff);
+       }
+       __archive_read_consume(a, skip);
+       break;
+@@ -979,9 +977,7 @@
+ 	      skip -= did_read;
+       }
+       if ((crc32_val & 0xffff) != crc32_expected) {
+-	      archive_set_error(&a->archive, ARCHIVE_ERRNO_FILE_FORMAT,
+-		  "Header CRC error");
+-	      return (ARCHIVE_FATAL);
++              fprintf(stderr, "NOTE: checksum mismatch: %04x -> %04x\n", crc32_expected, crc32_val & 0xffff);
+       }
+       if (head_type == ENDARC_HEAD)
+ 	      return (ARCHIVE_EOF);
+@@ -1342,9 +1338,7 @@
+   /* File Header CRC check. */
+   crc32_val = crc32(crc32_val, h, (unsigned)(header_size - 7));
+   if ((crc32_val & 0xffff) != archive_le16dec(rar_header.crc)) {
+-    archive_set_error(&a->archive, ARCHIVE_ERRNO_FILE_FORMAT,
+-      "Header CRC error");
+-    return (ARCHIVE_FATAL);
++    fprintf(stderr, "NOTE: checksum mismatch: %04x -> %04x\n", archive_le16dec(rar_header.crc), crc32_val & 0xffff);
+   }
+   /* If no CRC error, Go on parsing File Header. */
+   p = h;

@@ -1,0 +1,14 @@
+--- a/tar/bsdtar.c
++++ b/tar/bsdtar.c
+@@ -792,6 +792,10 @@
+ 	if (strcmp(bsdtar->filename, "-") == 0)
+ 		bsdtar->filename = NULL;
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++	__AFL_INIT();
++#endif
++
+ 	switch(bsdtar->mode) {
+ 	case 'c':
+ 		tar_mode_c(bsdtar);
+
