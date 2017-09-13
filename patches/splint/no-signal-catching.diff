@@ -1,0 +1,13 @@
+--- a/src/llmain.c
++++ b/src/llmain.c
+@@ -394,8 +394,10 @@
+   g_messagestream = stderr;
+   g_errorstream = stderr;
+ 
++#if 0
+   (void) signal (SIGINT, llinterrupt);
+   (void) signal (SIGSEGV, llinterrupt); 
++#endif
+ 
+   flags_initMod ();
+   qual_initMod ();

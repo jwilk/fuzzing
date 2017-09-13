@@ -1,0 +1,14 @@
+--- a/src/llmain.c
++++ b/src/llmain.c
+@@ -778,6 +780,10 @@
+ 
+   cleanupMessages ();
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++  __AFL_INIT();
++#endif
++
+   DPRINTF (("Initializing cpp reader!"));
+   cppReader_initialize ();
+   cppReader_saveDefinitions ();
+
