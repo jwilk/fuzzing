@@ -1,0 +1,14 @@
+--- a/lib/lha_file_header.c
++++ b/lib/lha_file_header.c
+@@ -140,8 +140,9 @@
+ 
+ 	crc = 0;
+ 	lha_crc16_buf(&crc, header->raw_data, header->raw_data_len);
+-
+-	return crc == header->common_crc;
++	if (crc != header->common_crc)
++		fprintf(stderr, "NOTE: checksum mismatch: %04x -> %04x\n", header->common_crc, crc);
++	return 1;
+ }
+ 
+ // Decode MS-DOS timestamp.
