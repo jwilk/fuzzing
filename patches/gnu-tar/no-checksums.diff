@@ -1,0 +1,13 @@
+--- a/src/list.c
++++ b/src/list.c
+@@ -378,8 +378,8 @@
+ 
+   recorded_sum = parsed_sum;
+ 
+-  if (unsigned_sum != recorded_sum && signed_sum != recorded_sum)
+-    return HEADER_FAILURE;
++  if (unsigned_sum != recorded_sum)
++    fprintf(stderr, "NOTE: checksum mismatch: %06o -> %06o\n", recorded_sum, unsigned_sum);
+ 
+   return HEADER_SUCCESS;
+ }
