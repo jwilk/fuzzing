@@ -52,7 +52,7 @@
 -		archive_set_error(&a->archive, ARCHIVE_ERRNO_FILE_FORMAT,
 -		    "LHa header CRC error");
 -		return (ARCHIVE_FATAL);
-+		fprintf(stderr, "NOTE: checksum mismatch: %04x -> %04x\n", header_crc, lha->header_crc);
++		fprintf(stderr, "NOTE: checksum mismatch: %04x -> %04x\n", lha->header_crc, header_crc);
  	}
  	return (err);
  }
@@ -63,7 +63,7 @@
 -		archive_set_error(&a->archive, ARCHIVE_ERRNO_FILE_FORMAT,
 -		    "LHa header CRC error");
 -		return (ARCHIVE_FATAL);
-+		fprintf(stderr, "NOTE: checksum mismatch: %04x -> %04x\n", header_crc, lha->header_crc);
++		fprintf(stderr, "NOTE: checksum mismatch: %04x -> %04x\n", lha->header_crc, header_crc);
  	}
  	return (err);
  invalid:
