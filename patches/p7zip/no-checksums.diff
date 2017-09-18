@@ -1,0 +1,75 @@
+--- a/CPP/7zip/Archive/7z/7zIn.cpp
++++ b/CPP/7zip/Archive/7z/7zIn.cpp
+@@ -245,19 +245,24 @@
+ static inline bool TestSignature(const Byte *p)
+ {
+   CHECK_SIGNATURE
+-  return CrcCalc(p + 12, 20) == Get32(p + 8);
++  if (CrcCalc(p + 12, 20) != Get32(p + 8))
++    fprintf(stderr, "NOTE: checksum mismatch: %08d -> %08d\n", Get32(p + 8), CrcCalc(p + 12, 20));
++  return true;
+ }
+ 
+ #ifdef FORMAT_7Z_RECOVERY
+ static inline bool TestSignature2(const Byte *p)
+ {
+   CHECK_SIGNATURE;
+-  if (CrcCalc(p + 12, 20) == Get32(p + 8))
+-    return true;
++  if (CrcCalc(p + 12, 20) != Get32(p + 8))
++    fprintf(stderr, "NOTE: checksum mismatch: %08d -> %08d\n", Get32(p + 8), CrcCalc(p + 12, 20));
++  return true;
++#if 0
+   for (unsigned i = 8; i < kHeaderSize; i++)
+     if (p[i] != 0)
+       return false;
+   return (p[6] != 0 || p[7] != 0);
++#endif
+ }
+ #else
+ #define TestSignature2(p) TestSignature(p)
+@@ -1095,7 +1100,7 @@
+     
+     if (folders.FolderCRCs.ValidAndDefined(i))
+       if (CrcCalc(data, unpackSize) != folders.FolderCRCs.Vals[i])
+-        ThrowIncorrect();
++        fprintf(stderr, "NOTE: checksum mismatch: %08d -> %08d\n", folders.FolderCRCs.Vals[i], CrcCalc(data, unpackSize));
+   }
+   if (folders.PackPositions)
+       HeadersSize += folders.PackPositions[folders.NumPackStreams];
+@@ -1564,7 +1569,7 @@
+   RINOK(ReadStream_FALSE(_stream, buffer2, nextHeaderSize_t));
+ 
+   if (CrcCalc(buffer2, nextHeaderSize_t) != nextHeaderCRC)
+-    ThrowIncorrect();
++    fprintf(stderr, "NOTE: checksum mismatch: %08d -> %08d\n", nextHeaderCRC, CrcCalc(buffer2, nextHeaderSize_t));
+ 
+   if (!db.StartHeaderWasRecovered)
+     db.PhySizeWasConfirmed = true;
+--- a/CPP/7zip/Archive/Rar/RarHandler.cpp
++++ b/CPP/7zip/Archive/Rar/RarHandler.cpp
+@@ -179,7 +179,9 @@
+   
+ static bool CheckHeaderCrc(const Byte *header, size_t headerSize)
+ {
+-  return Get16(header) == (UInt16)(CrcCalc(header + 2, headerSize - 2) & 0xFFFF);
++  if (Get16(header) != (UInt16)(CrcCalc(header + 2, headerSize - 2) & 0xFFFF))
++    fprintf(stderr, "NOTE: checksum mismatch: %04x -> %04x\n", Get16(header), (UInt16)(CrcCalc(header + 2, headerSize - 2) & 0xFFFF);
++  return true;
+ }
+ 
+ HRESULT CInArchive::Open(IInStream *stream, const UInt64 *searchHeaderSizeLimit)
+--- a/CPP/7zip/Archive/Tar/TarIn.cpp
++++ b/CPP/7zip/Archive/Tar/TarIn.cpp
+@@ -245,10 +245,7 @@
+   }
+   
+   if (checkSumReal != checkSum)
+-  {
+-    if ((UInt32)checkSumReal_Signed != checkSum)
+-      return S_OK;
+-  }
++    fprintf(stderr, "NOTE: checksum mismatch: %06o -> %06o\n", checkSum, checkSumReal);
+ 
+   item.HeaderSize += NFileHeader::kRecordSize;
+ 
