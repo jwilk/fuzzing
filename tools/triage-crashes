@@ -5,6 +5,7 @@
 
 import argparse
 import collections
+import os
 import resource
 import shlex
 import subprocess as ipc
@@ -49,6 +50,13 @@ def main():
     options = ap.parse_args()
     mem_limit = options.m << 20
     resource.setrlimit(resource.RLIMIT_AS, [mem_limit, mem_limit])
+    if 'ASAN_OPTIONS' not in os.environ:
+        os.environ['ASAN_OPTIONS'] = (
+            'abort_on_error=1:'
+            'detect_leaks=0:'
+            'symbolize=0:'
+            'allocator_may_return_null=1'
+        )
     crashdata = collections.defaultdict(set)
     for path in options.i:
         [stdout, stderr] = run_gdb(options, path)
