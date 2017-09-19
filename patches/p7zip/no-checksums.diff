@@ -6,7 +6,7 @@
    CHECK_SIGNATURE
 -  return CrcCalc(p + 12, 20) == Get32(p + 8);
 +  if (CrcCalc(p + 12, 20) != Get32(p + 8))
-+    fprintf(stderr, "NOTE: checksum mismatch: %08d -> %08d\n", Get32(p + 8), CrcCalc(p + 12, 20));
++    fprintf(stderr, "NOTE: checksum mismatch: %08x -> %08x\n", Get32(p + 8), CrcCalc(p + 12, 20));
 +  return true;
  }
  
@@ -17,7 +17,7 @@
 -  if (CrcCalc(p + 12, 20) == Get32(p + 8))
 -    return true;
 +  if (CrcCalc(p + 12, 20) != Get32(p + 8))
-+    fprintf(stderr, "NOTE: checksum mismatch: %08d -> %08d\n", Get32(p + 8), CrcCalc(p + 12, 20));
++    fprintf(stderr, "NOTE: checksum mismatch: %08x -> %08x\n", Get32(p + 8), CrcCalc(p + 12, 20));
 +  return true;
 +#if 0
    for (unsigned i = 8; i < kHeaderSize; i++)
@@ -33,7 +33,7 @@
      if (folders.FolderCRCs.ValidAndDefined(i))
        if (CrcCalc(data, unpackSize) != folders.FolderCRCs.Vals[i])
 -        ThrowIncorrect();
-+        fprintf(stderr, "NOTE: checksum mismatch: %08d -> %08d\n", folders.FolderCRCs.Vals[i], CrcCalc(data, unpackSize));
++        fprintf(stderr, "NOTE: checksum mismatch: %08x -> %08x\n", folders.FolderCRCs.Vals[i], CrcCalc(data, unpackSize));
    }
    if (folders.PackPositions)
        HeadersSize += folders.PackPositions[folders.NumPackStreams];
@@ -42,7 +42,7 @@
  
    if (CrcCalc(buffer2, nextHeaderSize_t) != nextHeaderCRC)
 -    ThrowIncorrect();
-+    fprintf(stderr, "NOTE: checksum mismatch: %08d -> %08d\n", nextHeaderCRC, CrcCalc(buffer2, nextHeaderSize_t));
++    fprintf(stderr, "NOTE: checksum mismatch: %08x -> %08x\n", nextHeaderCRC, CrcCalc(buffer2, nextHeaderSize_t));
  
    if (!db.StartHeaderWasRecovered)
      db.PhySizeWasConfirmed = true;
