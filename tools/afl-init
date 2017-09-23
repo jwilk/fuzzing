@@ -7,29 +7,26 @@ set -e -u
 
 usage()
 {
-    printf '%s -i <indir> -o <syncdir> -S <ident> [-S <ident2>...]\n' "$0" >&2
+    printf '%s -i <indir> -o <syncdir> <ident>...\n' "$0" >&2
     exit 1
 }
 
 indir=
 syncdir=
-nodes=
 while getopts "i:o:S:" opt
 do
     case "$opt" in
         i) indir="$OPTARG";;
         o) syncdir="$OPTARG";;
-        S) nodes="$nodes $OPTARG";;
         *) exit 1;;
     esac
 done
 shift $((OPTIND-1))
-[ $# -eq 0 ] || usage
+[ $# -ne 0 ] || usage
 [ -n "$indir" ] || usage
 [ -n "$syncdir" ] || usage
-[ -n "$nodes" ] || usage
 
-for node in $nodes
+for node in "$@"
 do
     mkdir "$syncdir/$node"
     queue="$syncdir/$node/queue"
