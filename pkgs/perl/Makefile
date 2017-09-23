@@ -1,3 +1,6 @@
+# Copyright © 2017 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
 CC = afl-clang-fast
 PERL = perl
 CFLAGS = -Wall -O2 -g $(shell $(PERL) -MExtUtils::Embed -e ccopts)

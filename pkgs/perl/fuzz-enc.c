@@ -1,3 +1,8 @@
+/*
+ * Copyright © 2017 Jakub Wilk <jwilk@jwilk.net>
+ * SPDX-License-Identifier: MIT
+ */
+
 #include <EXTERN.h>
 #include <perl.h>
 

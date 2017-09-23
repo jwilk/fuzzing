@@ -1,5 +1,8 @@
 #!/usr/bin/perl
 
+# Copyright © 2017 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
 use strict;
 use warnings;
 
