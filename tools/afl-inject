@@ -7,15 +7,17 @@ set -e -u
 
 usage()
 {
-    printf '%s -o <syncdir> <testcase>...\n' "$0" >&2
+    printf '%s -o <syncdir> [-S <ident>] <testcase>...\n' "$0" >&2
     exit 1
 }
 
+instance=inject
 syncdir=
-while getopts "o:" opt
+while getopts "o:S:" opt
 do
     case "$opt" in
         o) syncdir="$OPTARG";;
+        S) instance="$OPTARG";;
         *) exit 1;;
     esac
 done
@@ -24,7 +26,7 @@ shift $((OPTIND-1))
 [ -n "$syncdir" ] || usage
 
 ls -d "$syncdir/" > /dev/null
-queue="$syncdir/inject/queue"
+queue="$syncdir/$instance/queue"
 mkdir -p "$queue"
 i=$(cd "$queue" && find . -maxdepth 1 -name 'id:*' | sed -e 's,^[.]/id:0*\([0-9]\+\).*,\1,' | sort -n | tail -n1)
 i=$((i + 1))
