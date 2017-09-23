@@ -1,0 +1,51 @@
+Turn noemutt(1) into a non-interactive program.
+
+afl-fuzz [options] -- /path/to/neomutt -R -f @@ -e 'set mailcap_path='
+
+--- a/main.c
++++ b/main.c
+@@ -430,12 +430,14 @@
+       exit(0);
+   }
+ 
++#if 0
+   /* Check for a batch send. */
+   if (!isatty(0) || queries || alias_queries || dump_variables || batch_mode)
+   {
+     set_option(OPTNOCURSES);
+     sendflags = SENDBATCH;
+   }
++#endif
+ 
+   /* Always create the mutt_windows because batch mode has some shared code
+    * paths that end up referencing them. */
+@@ -532,6 +534,19 @@
+   if (batch_mode)
+     exit(0);
+ 
++  int pipefd[2];
++  if (pipe(pipefd))
++    abort();
++  if (dprintf(pipefd[1], "\7\nhqq") != 5)
++    abort();
++  if (dup2(pipefd[0], 0))
++    abort();
++  close(pipefd[0]);
++  close(pipefd[1]);
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++   __AFL_INIT();
++#endif
++
+   if (sendflags & SENDPOSTPONED)
+   {
+     if (!option(OPTNOCURSES))
+--- a/mx.c
++++ b/mx.c
+@@ -17,6 +17,7 @@
+  */
+ 
+ #include "config.h"
++#undef USE_DOTLOCK
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <limits.h>
