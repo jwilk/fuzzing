@@ -19,7 +19,21 @@ afl-fuzz [options] -- /path/to/neomutt -R -f @@ -e 'set mailcap_path='
  
    /* Always create the mutt_windows because batch mode has some shared code
     * paths that end up referencing them. */
-@@ -532,6 +534,19 @@
+@@ -518,6 +520,7 @@
+ #ifdef USE_NNTP
+     skip |= mx_is_nntp(fpath);
+ #endif
++#if 0
+     if (!skip && stat(fpath, &sb) == -1 && errno == ENOENT)
+     {
+       snprintf(msg2, sizeof(msg2), _("%s does not exist. Create it?"), Maildir);
+@@ -527,11 +530,25 @@
+           mutt_error(_("Can't create %s: %s."), Maildir, strerror(errno));
+       }
+     }
++#endif
+   }
+ 
    if (batch_mode)
      exit(0);
  
