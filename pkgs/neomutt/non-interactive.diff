@@ -37,6 +37,9 @@ afl-fuzz [options] -- /path/to/neomutt -R -f @@ -e 'set mailcap_path='
    if (batch_mode)
      exit(0);
  
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++   __AFL_INIT();
++#endif
 +  int pipefd[2];
 +  if (pipe(pipefd))
 +    abort();
@@ -46,9 +49,6 @@ afl-fuzz [options] -- /path/to/neomutt -R -f @@ -e 'set mailcap_path='
 +    abort();
 +  close(pipefd[0]);
 +  close(pipefd[1]);
-+#ifdef __AFL_HAVE_MANUAL_CONTROL
-+   __AFL_INIT();
-+#endif
 +
    if (sendflags & SENDPOSTPONED)
    {
