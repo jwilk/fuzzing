@@ -1,4 +1,4 @@
-Turn noemutt(1) into a non-interactive program.
+Turn neomutt(1) into a non-interactive program.
 
 afl-fuzz [options] -- /path/to/neomutt -R -f @@ -e 'set mailcap_path='
 
