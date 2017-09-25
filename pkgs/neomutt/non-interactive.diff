@@ -1,6 +1,6 @@
 Turn neomutt(1) into a non-interactive program.
 
-afl-fuzz [options] -- /path/to/neomutt -R -f @@ -e 'set mailcap_path='
+afl-fuzz [options] -- /path/to/neomutt -R -f @@
 
 --- a/main.c
 +++ b/main.c
@@ -63,3 +63,21 @@ afl-fuzz [options] -- /path/to/neomutt -R -f @@ -e 'set mailcap_path='
  #include <errno.h>
  #include <fcntl.h>
  #include <limits.h>
+--- a/init.c
++++ b/init.c
+@@ -4112,6 +4112,7 @@
+     Spoolfile = safe_strdup(buffer);
+   }
+ 
++#if 0
+   if ((p = getenv("MAILCAPS")))
+     MailcapPath = safe_strdup(p);
+   else
+@@ -4121,6 +4122,7 @@
+         "~/.mailcap:" PKGDATADIR "/mailcap:" SYSCONFDIR
+         "/mailcap:/etc/mailcap:/usr/etc/mailcap:/usr/local/etc/mailcap");
+   }
++#endif
+ 
+   Tempdir = safe_strdup((p = getenv("TMPDIR")) ? p : "/tmp");
+ 
