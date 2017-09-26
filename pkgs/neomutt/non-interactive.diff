@@ -1,6 +1,7 @@
 Turn neomutt(1) into a non-interactive program.
 
-afl-fuzz [options] -- /path/to/neomutt -R -f @@
+$ export AFL_STDIN=$(printf '\7\nhqq')
+$ afl-fuzz [options] -- /path/to/neomutt -R -f @@
 
 --- a/main.c
 +++ b/main.c
@@ -27,7 +28,7 @@ afl-fuzz [options] -- /path/to/neomutt -R -f @@
      if (!skip && stat(fpath, &sb) == -1 && errno == ENOENT)
      {
        snprintf(msg2, sizeof(msg2), _("%s does not exist. Create it?"), Maildir);
-@@ -527,11 +530,28 @@
+@@ -527,11 +530,31 @@
            mutt_error(_("Can't create %s: %s."), Maildir, strerror(errno));
        }
      }
@@ -45,7 +46,10 @@ afl-fuzz [options] -- /path/to/neomutt -R -f @@
 +    int pipefd[2];
 +    if (pipe(pipefd))
 +      abort();
-+    if (dprintf(pipefd[1], "\7\nhqq") != 5)
++    const char *input = getenv("AFL_STDIN");
++    if (input == NULL)
++      abort();
++    if (dprintf(pipefd[1], "%s", input) != strlen(input))
 +      abort();
 +    if (dup2(pipefd[0], 0))
 +      abort();
