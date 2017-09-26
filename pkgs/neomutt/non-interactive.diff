@@ -27,7 +27,7 @@ afl-fuzz [options] -- /path/to/neomutt -R -f @@
      if (!skip && stat(fpath, &sb) == -1 && errno == ENOENT)
      {
        snprintf(msg2, sizeof(msg2), _("%s does not exist. Create it?"), Maildir);
-@@ -527,11 +530,25 @@
+@@ -527,11 +530,28 @@
            mutt_error(_("Can't create %s: %s."), Maildir, strerror(errno));
        }
      }
@@ -40,15 +40,18 @@ afl-fuzz [options] -- /path/to/neomutt -R -f @@
 +#ifdef __AFL_HAVE_MANUAL_CONTROL
 +   __AFL_INIT();
 +#endif
-+  int pipefd[2];
-+  if (pipe(pipefd))
-+    abort();
-+  if (dprintf(pipefd[1], "\7\nhqq") != 5)
-+    abort();
-+  if (dup2(pipefd[0], 0))
-+    abort();
-+  close(pipefd[0]);
-+  close(pipefd[1]);
++  if (!isatty(0))
++  {
++    int pipefd[2];
++    if (pipe(pipefd))
++      abort();
++    if (dprintf(pipefd[1], "\7\nhqq") != 5)
++      abort();
++    if (dup2(pipefd[0], 0))
++      abort();
++    close(pipefd[0]);
++    close(pipefd[1]);
++  }
 +
    if (sendflags & SENDPOSTPONED)
    {
