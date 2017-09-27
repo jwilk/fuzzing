@@ -1,0 +1,21 @@
+Don't link with libc explicitly.
+
+Work-around for: https://bugs.debian.org/876973
+
+--- a/initmake
++++ b/initmake
+@@ -239,14 +239,6 @@
+   echo 2>&1 "you are trying to compile this on (uname -a).  Thanks."
+   exit 1
+ fi
+-$cc $CFLAGS1 $CFLAGS _autotst.$O -o _autotst $LDFLAGS1 -lc >_autotst.rrr 2>&1 \
+- && if grep "[\"']c['\"]" _autotst.rrr >$DEVNULL ||
+-   $FGREP libc _autotst.rrr >$DEVNULL
+-  then
+-  :
+-  else
+-     LDFLAGSC=" -lc"
+-  fi
+ 
+ LDFLAGS="$SEARCHLIBS"
+ firstrun=yes
