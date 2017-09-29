@@ -1,0 +1,12 @@
+write-po: don't call abort().
+
+--- a/gettext-tools/src/write-po.c
++++ b/gettext-tools/src/write-po.c
+@@ -60,6 +60,7 @@
+ # define putc putc_unlocked
+ #endif
+ 
++#define abort() exit(1)
+ 
+ /* =================== Putting together a #, flags line. =================== */
+ 
