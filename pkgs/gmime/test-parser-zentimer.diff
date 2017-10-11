@@ -2,14 +2,13 @@ Disable ZenTimer.
 
 --- a/tests/test-parser.c
 +++ b/tests/test-parser.c
-@@ -32,10 +32,7 @@
+@@ -32,9 +32,6 @@
  
  #include <gmime/gmime.h>
  
 -#if !defined (G_OS_WIN32) || defined (__MINGW32__)
 -#define ENABLE_ZENTIMER
- #include "zentimer.h"
 -#endif
+ #include "zentimer.h"
  
  #define TEST_RAW_HEADER
- #define TEST_PRESERVE_HEADERS
