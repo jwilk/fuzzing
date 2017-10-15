@@ -1,0 +1,13 @@
+--- a/shell.c
++++ b/shell.c
+@@ -711,6 +711,10 @@
+   cmd_init ();		/* initialize the command object caches */
+   uwp_init ();
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++  __AFL_INIT();
++#endif
++
+   if (command_execution_string)
+     {
+       arg_index = bind_args (argv, arg_index, argc, 0);
