@@ -1,0 +1,12 @@
+--- a/main.c
++++ b/main.c
+@@ -525,6 +525,9 @@
+ #else
+ 		s->file = argv[argi++];
+ #endif
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++		__AFL_INIT();
++#endif
+ 		s->u.shf = shf_open(s->file, O_RDONLY, 0,
+ 		    SHF_MAPHI | SHF_CLEXEC);
+ 		if (s->u.shf == NULL) {
