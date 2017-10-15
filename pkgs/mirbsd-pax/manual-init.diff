@@ -1,0 +1,13 @@
+--- a/pax.c
++++ b/pax.c
+@@ -269,7 +269,9 @@
+ 		return (exit_val);
+ 	}
+ 	setlinebuf(listf);
+-
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++	__AFL_INIT();
++#endif
+ 	/*
+ 	 * select a primary operation mode
+ 	 */
