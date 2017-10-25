@@ -1,0 +1,15 @@
+Don't look up integers in the hash table.
+
+Fixes non-determinism when checking syntax of scripts that use “$$”.
+
+--- zsh-5.4.2.orig/Src/hashtable.c
++++ zsh-5.4.2/Src/hashtable.c
+@@ -228,6 +228,8 @@ gethashnode(HashTable ht, const char *na
+     unsigned hashval;
+     HashNode hp;
+ 
++    if (nam[0] >= '0' && nam[0] <= '9')
++	return NULL;
+     hashval = ht->hash(nam) % ht->hsize;
+     for (hp = ht->nodes[hashval]; hp; hp = hp->next) {
+ 	if (ht->cmpnodes(hp->nam, nam) == 0) {

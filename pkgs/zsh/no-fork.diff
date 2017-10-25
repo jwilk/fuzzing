@@ -1,0 +1,22 @@
+Don't fork when checking syntax.
+
+Fixes non-determinism when checking syntax of scripts that use “&”.
+
+Work-around for: https://bugs.debian.org/879596
+
+--- a/Src/exec.c
++++ b/Src/exec.c
+@@ -308,7 +308,12 @@
+      * zippy anyway.
+      */
+     queue_signals();
+-    pid = fork();
++    if (isset(EXECOPT))
++    	pid = fork();
++    else {
++	pid = -1;
++	errno = EACCES;
++    }
+     unqueue_signals();
+     if (pid == -1) {
+ 	zerr("fork failed: %e", errno);
