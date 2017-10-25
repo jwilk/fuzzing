@@ -1,0 +1,13 @@
+Don't preempt getenv().
+
+--- a/src/cmd/ksh93/sh/name.c
++++ b/src/cmd/ksh93/sh/name.c
+@@ -3146,7 +3146,7 @@
+ 	return(0);
+ }
+ 
+-#ifndef _NEXT_SOURCE
++#if 0
+ /*
+  * Some dynamic linkers will make this file see the libc getenv(),
+  * so sh_getenv() is used for the astintercept() callback.  Plain
