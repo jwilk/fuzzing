@@ -29,7 +29,7 @@ ls -d "$syncdir/" > /dev/null
 queue="$syncdir/$instance/queue"
 mkdir -p "$queue"
 i=$(cd "$queue" && find . -maxdepth 1 -name 'id:*' | sed -e 's,^[.]/id:0*\([0-9]\+\).*,\1,' | sort -n | tail -n1)
-i=$((i + 1))
+[ -z "$i" ] || i=$((i + 1))
 for file in "$@"
 do
     tmpfile=$(mktemp -p "$queue" .tmpinject.XXXXX)
