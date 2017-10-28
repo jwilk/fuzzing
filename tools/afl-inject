@@ -1,43 +1,58 @@
-#!/bin/sh
+#!/usr/bin/env perl
 
 # Copyright © 2017 Jakub Wilk <jwilk@jwilk.net>
 # SPDX-License-Identifier: MIT
 
-set -e -u
+use strict;
+use warnings;
 
-usage()
+use English qw(-no_match_vars);
+use File::Copy ();
+use File::Find ();
+use File::Path ();
+use File::Temp ();
+use Getopt::Long qw(:config no_ignore_case bundling);
+
+sub usage
 {
-    printf '%s -o <syncdir> [-S <ident>] <testcase>...\n' "$0" >&2
-    exit 1
+    print {*STDERR} "Usage: $PROGRAM_NAME -o <syncdir> [-S <ident>] <testcase>...\n";
+    exit 1;
 }
 
-instance=inject
-syncdir=
-while getopts "o:S:" opt
-do
-    case "$opt" in
-        o) syncdir="$OPTARG";;
-        S) instance="$OPTARG";;
-        *) exit 1;;
-    esac
-done
-shift $((OPTIND-1))
-[ $# -ne 0 ] || usage
-[ -n "$syncdir" ] || usage
-
-ls -d "$syncdir/" > /dev/null
-queue="$syncdir/$instance/queue"
-mkdir -p "$queue"
-i=$(cd "$queue" && find . -maxdepth 1 -name 'id:*' | sed -e 's,^[.]/id:0*\([0-9]\+\).*,\1,' | sort -n | tail -n1)
-[ -z "$i" ] || i=$((i + 1))
-for file in "$@"
-do
-    tmpfile=$(mktemp -p "$queue" .tmpinject.XXXXX)
-    name=$(printf "id:%06d,inject" $i)
-    printf '%s -> %s\n' "$file" "$queue/$name"
-    cat < "$file" > "$tmpfile"
-    mv "$tmpfile" "$queue/$name"
-    i=$((i + 1))
-done
+my %opts;
+my $syncdir;
+my $instance = 'inject';
+Getopt::Long::GetOptions(
+    'o=s' => \$syncdir,
+    'S=s' => \$instance
+) or usage;
+@ARGV or usage;
+defined $syncdir or usage;
+stat "$syncdir" or die "$syncdir: $ERRNO";
+my $queue = "$syncdir/$instance/queue";
+File::Path::make_path($queue);
+my $i = -1;
+File::Find::find(
+    sub {
+        if ($_ eq '.') {
+            return;
+        }
+        if (/^id:([0-9]+)/) {
+            my $j = $1;
+            if ($j > $i) {
+                $i = $j;
+            }
+        }
+        $File::Find::prune = 1;
+    }, $queue
+);
+for my $file (@ARGV) {
+    my $tmpfile = File::Temp::mktemp("$queue/.tmpinject.XXXXX");
+    my $name = sprintf('id:%06d,inject', ++$i);
+    my $target = "$queue/$name";
+    print "$file -> $target\n";
+    File::Copy::copy($file, $tmpfile) or die "$file -> $tmpfile: $ERRNO";
+    rename($tmpfile, $target) or die "$tmpfile -> $target: $ERRNO";
+}
 
 # vim:ts=4 sts=4 sw=4 et
