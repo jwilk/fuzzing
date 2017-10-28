@@ -22,9 +22,11 @@ sub usage
 my %opts;
 my $syncdir;
 my $instance = 'inject';
+my $move = 0;
 Getopt::Long::GetOptions(
     'o=s' => \$syncdir,
-    'S=s' => \$instance
+    'S=s' => \$instance,
+    'm' => \$move,
 ) or usage;
 @ARGV or usage;
 defined $syncdir or usage;
@@ -46,12 +48,15 @@ File::Find::find(
         $File::Find::prune = 1;
     }, $queue
 );
+my $copy_or_move = $move
+    ? sub { return File::Copy::move @_ }
+    : sub { return File::Copy::copy @_ };
 for my $file (@ARGV) {
     my $tmpfile = File::Temp::mktemp("$queue/.tmpinject.XXXXX");
     my $name = sprintf('id:%06d,inject', ++$i);
     my $target = "$queue/$name";
     print "$file -> $target\n";
-    File::Copy::copy($file, $tmpfile) or die "$file -> $tmpfile: $ERRNO";
+    $copy_or_move->($file, $tmpfile) or die "$file -> $tmpfile: $ERRNO";
     rename($tmpfile, $target) or die "$tmpfile -> $target: $ERRNO";
 }
 
