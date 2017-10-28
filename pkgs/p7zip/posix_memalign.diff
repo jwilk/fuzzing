@@ -1,0 +1,24 @@
+Disallow large allocations.
+
+Work-around for: https://bugs.debian.org/878159
+
+--- a/C/Alloc.c
++++ b/C/Alloc.c
+@@ -8,6 +8,7 @@
+ #endif
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <stdint.h>
+ 
+ #ifdef _7ZIP_LARGE_PAGES
+ #ifdef __linux__
+@@ -41,7 +42,8 @@
+ {
+   // return _mm_malloc(size,16);
+   void * ptr = 0;
+-
++  if (size > SIZE_MAX / 2)
++    return NULL;
+   if (posix_memalign (&ptr, 16, size) == 0)
+     return ptr;
+   else
