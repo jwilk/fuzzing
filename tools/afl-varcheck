@@ -28,6 +28,10 @@ run_afl_showmap()
         printf 'afl-varcheck: afl-showmap failed\n' >&2
         exit 1
     }
+    [ -s "$tmpdir/$j" ] || {
+        printf 'afl-varcheck: no instrumentation detected\n' >&2
+        exit 1
+    }
 }
 run_afl_showmap 1 "$@"
 i=1
