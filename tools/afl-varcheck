@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# Copyright © 2017 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
+set -e -u
+
+usage()
+{
+    printf 'Usage: %s <command> ...\n' "${0##*/}" >&2
+    exit 1
+}
+
+[ $# -gt 0 ] || usage
+tmpdir=$(mktemp -d -t afl-varcheck.XXXXXX)
+if [ -t 0 ]
+then
+    input=/dev/null
+else
+    input="$tmpdir/input"
+    cat > "$input"
+fi
+run_afl_showmap()
+{
+    j="$1"
+    shift
+    afl-showmap -m none -q -o "$tmpdir/$j" -- "$@" < "$input" || {
+        printf 'afl-varcheck: afl-showmap failed\n' >&2
+        exit 1
+    }
+}
+run_afl_showmap 1 "$@"
+i=1
+while [ $i -lt 25 ]
+do
+    run_afl_showmap 2 "$@"
+    if ! cmp -s "$tmpdir/1" "$tmpdir/2"
+    then
+        rm -rf "$tmpdir"
+        printf 'afl-varcheck: variable behavior detected\n' >&2
+        kill -ABRT $$
+    fi
+    i=$((i + 1))
+done
+rm -rf "$tmpdir"
+
+# vim:ts=4 sts=4 sw=4 et
