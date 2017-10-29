@@ -15,7 +15,9 @@ use Getopt::Long qw(:config no_ignore_case bundling);
 
 sub usage
 {
-    print {*STDERR} "Usage: $PROGRAM_NAME -o <syncdir> [-S <ident>] <testcase>...\n";
+    my $prog = $PROGRAM_NAME;
+    $prog =~ s{.*/}{};
+    print {*STDERR} "Usage: $prog -o <syncdir> [-S <ident>] <testcase>...\n";
     exit 1;
 }
 

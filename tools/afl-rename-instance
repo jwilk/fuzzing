@@ -7,7 +7,7 @@ set -e -u
 
 usage()
 {
-    printf '%s -o <syncdir> <old-name> <new-name>\n' "$0" >&2
+    printf 'Usage: %s -o <syncdir> <old-name> <new-name>\n' "${0##*/}" >&2
     exit 1
 }
 
