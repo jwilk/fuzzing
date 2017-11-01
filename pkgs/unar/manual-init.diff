@@ -1,0 +1,13 @@
+--- a/XADMaster/lsar.m
++++ b/XADMaster/lsar.m
+@@ -139,7 +139,9 @@
+ 	}
+ 
+ 	NSString *filename=[files objectAtIndex:0];
+-
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++	__AFL_INIT();
++#endif
+ 	if(json)
+ 	{
+ 		printer=[CSJSONPrinter new];
