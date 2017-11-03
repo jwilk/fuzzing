@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Copyright © 2017 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
+set -e -u
+
+usage()
+{
+    printf 'Usage: %s -o <syncdir> <ident>...\n' "${0##*/}" >&2
+    exit 1
+}
+
+while getopts "o:" opt
+do
+    case "$opt" in
+        o) syncdir="$OPTARG";;
+        *) exit 1;;
+    esac
+done
+shift $((OPTIND-1))
+[ $# -ne 0 ] || usage
+[ -n "$syncdir" ] || usage
+for instance in "$@"
+do
+    ls -d "$syncdir/$instance/queue/" > /dev/null
+    rm -rf "$syncdir/$instance/queue/.state/"
+    find "$syncdir/$instance/queue/" -type f \( '!' -name 'id:000000,*' \) -delete
+done
+
+# vim:ts=4 sts=4 sw=4 et
