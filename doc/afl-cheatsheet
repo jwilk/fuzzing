@@ -6,6 +6,7 @@ Env variables::
    AFL_SKIP_CPUFREQ=1
    AFL_NO_ARITH=1
    AFL_FAST_CAL=1
+   AFL_ANALYZE_HEX=1
 
 LLVM mode::
 
