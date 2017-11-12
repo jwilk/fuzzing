@@ -1,0 +1,13 @@
+--- a/rpm2cpio.c
++++ b/rpm2cpio.c
+@@ -53,7 +53,9 @@
+         vsflags |= _RPMVSF_NOSIGNATURES;
+         vsflags |= RPMVSF_NOHDRCHK;
+ 	(void) rpmtsSetVSFlags(ts, vsflags);
+-
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++	__AFL_INIT();
++#endif
+ 	rc = rpmReadPackageFile(ts, fdi, "rpm2cpio", &h);
+ 
+ 	ts = rpmtsFree(ts);
