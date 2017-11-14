@@ -1,0 +1,14 @@
+--- a/gcab.c
++++ b/gcab.c
+@@ -163,6 +163,10 @@
+     GOutputStream *output;
+     GFile *cwd;
+ 
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++    __AFL_INIT();
++#endif
++
+     if (list || list_details || extract || dump_reserved) {
+         GFile *file = g_file_new_for_commandline_arg (args[0]);
+         GInputStream *in = G_INPUT_STREAM (g_file_read (file, cancellable, &error));
+

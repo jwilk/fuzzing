@@ -1,0 +1,24 @@
+--- a/libgcab/gcab-folder.c
++++ b/libgcab/gcab-folder.c
+@@ -381,7 +381,12 @@
+                 gfile = newgfile;
+             }
+         }
+-
++#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
++	GFile *gstdout = g_file_new_for_path ("/dev/stdout");
++        g_clear_object (&out);
++        out = g_file_append_to (gstdout, 0, cancellable, error);
++        g_object_unref (gstdout);
++#else
+         GFile *parent = g_file_get_parent (gfile);
+ 
+         if (!g_file_make_directory_with_parents (parent, cancellable, &my_error)) {
+@@ -398,6 +403,7 @@
+ 
+         g_clear_object (&out);
+         out = g_file_replace (gfile, NULL, FALSE, G_FILE_CREATE_REPLACE_DESTINATION, cancellable, error);
++#endif
+         g_object_unref (gfile);
+         if (!out)
+             goto end;
