@@ -1,0 +1,18 @@
+--- a/archival/libarchive/get_header_tar.c
++++ b/archival/libarchive/get_header_tar.c
+@@ -276,13 +276,13 @@
+ 		if ((*endp != '\0' && *endp != ' ')
+ 		 || (sum_u != sum IF_FEATURE_TAR_OLDSUN_COMPATIBILITY(&& sum_s != sum))
+ 		) {
+-			bb_error_msg_and_die("invalid tar header checksum");
++			bb_error_msg("NOTE: checksum mismatch %06o -> %06o", sum, sum_u);
+ 		}
+ 	}
+ 	/* don't use xstrtoul, tar.chksum may have leading spaces */
+ 	sum = strtoul(tar.chksum, NULL, 8);
+ 	if (sum_u != sum IF_FEATURE_TAR_OLDSUN_COMPATIBILITY(&& sum_s != sum)) {
+-		bb_error_msg_and_die("invalid tar header checksum");
++		bb_error_msg("NOTE: checksum mismatch %06o -> %06o", sum, sum_u);
+ 	}
+ 
+ 	/* 0 is reserved for high perf file, treat as normal file */
