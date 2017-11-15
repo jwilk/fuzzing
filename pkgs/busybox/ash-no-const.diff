@@ -1,0 +1,29 @@
+--- a/shell/ash.c
++++ b/shell/ash.c
+@@ -378,7 +378,7 @@
+ #endif
+ 	pid_t backgndpid;        /* pid of last background process */
+ };
+-extern struct globals_misc *const ash_ptr_to_globals_misc;
++extern struct globals_misc * ash_ptr_to_globals_misc;
+ #define G_misc (*ash_ptr_to_globals_misc)
+ #define exitstatus        (G_misc.exitstatus )
+ #define back_exitstatus   (G_misc.back_exitstatus )
+@@ -1431,7 +1431,7 @@
+ 	size_t g_stacknleft; // = MINSIZE;
+ 	struct stack_block stackbase;
+ };
+-extern struct globals_memstack *const ash_ptr_to_globals_memstack;
++extern struct globals_memstack * ash_ptr_to_globals_memstack;
+ #define G_memstack (*ash_ptr_to_globals_memstack)
+ #define g_stackp     (G_memstack.g_stackp    )
+ #define g_stacknxt   (G_memstack.g_stacknxt  )
+@@ -1983,7 +1983,7 @@
+ 	struct var *vartab[VTABSIZE];
+ 	struct var varinit[ARRAY_SIZE(varinit_data)];
+ };
+-extern struct globals_var *const ash_ptr_to_globals_var;
++extern struct globals_var * ash_ptr_to_globals_var;
+ #define G_var (*ash_ptr_to_globals_var)
+ #define shellparam    (G_var.shellparam   )
+ //#define redirlist     (G_var.redirlist    )
