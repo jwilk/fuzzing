@@ -10,21 +10,24 @@ import resource
 import shlex
 import subprocess as ipc
 
+def quote_args(args, atat=None):
+    if atat is not None:
+        args = (
+            x if x != '@@' else atat
+            for x in args
+        )
+    return ' '.join(
+        map(shlex.quote, args)
+    )
+
 def run_gdb(options, path):
     if '@@' in options.arguments:
-        target_args = ' '.join(
-            map(shlex.quote, (
-                x if x != '@@' else path
-                for x in options.arguments
-            ))
-        )
+        target_args = quote_args(options.arguments, path)
         gdb_run_command = 'run {args} < /dev/null > /dev/null 2> /dev/null'.format(
             args=target_args
         )
     else:
-        target_args = ' '.join(
-            map(shlex.quote, options.arguments)
-        )
+        target_args = quote_args(options.arguments)
         gdb_run_command = 'run {args} < {path} > /dev/null 2> /dev/null'.format(
             args=target_args,
             path=shlex.quote(path)
