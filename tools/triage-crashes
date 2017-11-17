@@ -5,6 +5,7 @@
 
 import argparse
 import collections
+import contextlib
 import os
 import resource
 import shlex
@@ -44,8 +45,33 @@ def run_gdb(options, path):
         stderr.decode('ASCII', 'replace'),
     )
 
+def run_raw(options, path):
+    cmdline = [options.command]
+    with contextlib.ExitStack() as stack:
+        if '@@' in options.arguments:
+            cmdline += [
+                x if x != '@@' else path
+                for x in options.arguments
+            ]
+            stdin = ipc.DEVNULL
+        else:
+            cmdline += options.arguments
+            stdin = open(path, 'rb')
+            stack.enter_context(stdin)
+        target = ipc.Popen(cmdline,
+            stdin=stdin,
+            stdout=ipc.PIPE,
+            stderr=ipc.PIPE,
+        )
+        (stdout, stderr) = target.communicate()
+        return (
+            stdout.decode('ASCII', 'replace'),
+            stderr.decode('ASCII', 'replace'),
+        )
+
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument('-G', '--no-gdb', dest='gdb', action='store_false', help="don\'t use GDB")
     ap.add_argument('-i', metavar='INPUT-FILE', nargs='+', required=True)
     ap.add_argument('-m', type=int, default=100, metavar='N')
     ap.add_argument('command', metavar='COMMAND')
@@ -61,8 +87,9 @@ def main():
             'allocator_may_return_null=1'
         )
     crashdata = collections.defaultdict(set)
+    run = run_gdb if options.gdb else run_raw
     for path in options.i:
-        [stdout, stderr] = run_gdb(options, path)
+        [stdout, stderr] = run(options, path)
         crashdata[(stdout, stderr)].add(path)
     for (stdout, stderr), paths in sorted(crashdata.items()):
         for path in sorted(paths):
