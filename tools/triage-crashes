@@ -11,6 +11,8 @@ import resource
 import shlex
 import subprocess as ipc
 
+lambda: (yield from 0)  # Python >= 3.3 is required
+
 def quote_args(args, atat=None):
     if atat is not None:
         args = (
