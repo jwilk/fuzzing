@@ -87,8 +87,6 @@ def main():
     if 'ASAN_OPTIONS' not in os.environ:
         os.environ['ASAN_OPTIONS'] = (
             'abort_on_error=1:'
-            'detect_leaks=0:'
-            'symbolize=0:'
             'allocator_may_return_null=1'
         )
     crashdata = collections.defaultdict(set)
