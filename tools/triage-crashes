@@ -18,14 +18,14 @@ def run_gdb(options, path):
                 for x in options.arguments
             ))
         )
-        gdb_run_command = 'run {args} >/dev/null 2>/dev/null'.format(
+        gdb_run_command = 'run {args} > /dev/null 2> /dev/null'.format(
             args=target_args
         )
     else:
         target_args = ' '.join(
             map(shlex.quote, options.arguments)
         )
-        gdb_run_command = 'run {args} < {path} >/dev/null 2>/dev/null'.format(
+        gdb_run_command = 'run {args} < {path} > /dev/null 2> /dev/null'.format(
             args=target_args,
             path=shlex.quote(path)
         )
