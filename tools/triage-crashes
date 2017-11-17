@@ -38,8 +38,11 @@ def run_gdb(options, path):
         '--ex', 'backtrace',
         options.command
     ]
-    gdb = ipc.Popen(gdb_cmdline, stdout=ipc.PIPE, stderr=ipc.PIPE)
-    stdout, stderr = gdb.communicate()
+    gdb = ipc.Popen(gdb_cmdline,
+        stdout=ipc.PIPE,
+        stderr=ipc.PIPE,
+    )
+    (stdout, stderr) = gdb.communicate()
     return (
         stdout.decode('ASCII', 'replace'),
         stderr.decode('ASCII', 'replace'),
