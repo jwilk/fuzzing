@@ -11,3 +11,16 @@
  	rc = rpmReadPackageFile(ts, fdi, "rpm2cpio", &h);
  
  	ts = rpmtsFree(ts);
+--- a/rpmqv.c
++++ b/rpmqv.c
+@@ -90,7 +90,9 @@
+     xsetprogname(argv[0]); /* Portability call -- see system.h */
+ 
+     optCon = rpmcliInit(argc, argv, optionsTable);
+-
++#ifdef __AFL_HAVE_MANUAL_CONTROL
++    __AFL_INIT();
++#endif
+     /* Set the major mode based on argv[0] */
+ #ifdef	IAM_RPMQV
+     if (rstreq(xgetprogname(), "rpmquery"))	bigMode = MODE_QUERY;
