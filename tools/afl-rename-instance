@@ -12,7 +12,7 @@ usage()
 }
 
 syncdir=
-while getopts "o:" opt
+while getopts 'o:' opt
 do
     case "$opt" in
         o) syncdir="$OPTARG";;

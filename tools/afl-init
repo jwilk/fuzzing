@@ -13,7 +13,7 @@ usage()
 
 indir=
 syncdir=
-while getopts "i:o:" opt
+while getopts 'i:o:' opt
 do
     case "$opt" in
         i) indir="$OPTARG";;
