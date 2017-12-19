@@ -13,6 +13,11 @@ import subprocess as ipc
 
 lambda: (yield from 0)  # Python >= 3.3 is required
 
+try:
+    RLIMIT_AS = resource.RLIMIT_AS
+except AttributeError:
+    RLIMIT_AS = resource.RLIMIT_DATA
+
 def quote_args(args, atat=None):
     if atat is not None:
         args = (
@@ -83,7 +88,7 @@ def main():
     ap.add_argument('arguments', nargs='*', metavar='ARG')
     options = ap.parse_args()
     mem_limit = options.m << 20
-    resource.setrlimit(resource.RLIMIT_AS, [mem_limit, mem_limit])
+    resource.setrlimit(RLIMIT_AS, [mem_limit, mem_limit])
     if 'ASAN_OPTIONS' not in os.environ:
         os.environ['ASAN_OPTIONS'] = (
             'abort_on_error=1:'
