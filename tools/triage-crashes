@@ -80,7 +80,7 @@ def run_raw(options, path):
         )
 
 def main():
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(usage='triage-crashes [options] -i INPUT-FILE [INPUT-FILE ...] -- COMMAND [ARG ...]')
     ap.add_argument('-G', '--no-gdb', dest='gdb', action='store_false', help="don\'t use GDB")
     ap.add_argument('-i', metavar='INPUT-FILE', nargs='+', required=True)
     ap.add_argument('-m', type=int, default=100, metavar='N')
