@@ -82,7 +82,7 @@ def run_raw(options, path):
 def main():
     ap = argparse.ArgumentParser(usage='triage-crashes [options] -i FILE [FILE ...] -- COMMAND [ARG ...]')
     ap.add_argument('-i', metavar='FILE', nargs='+', required=True, help='input files')
-    ap.add_argument('-m', type=int, default=100, metavar='N', help='set virtual memory limit to N mebibytes')
+    ap.add_argument('-m', type=int, default=100, metavar='N', help='set virtual memory limit to N mebibytes (default: 100 MiB)')
     ap.add_argument('-G', '--no-gdb', dest='gdb', action='store_false', help="don\'t use GDB")
     ap.add_argument('command', metavar='COMMAND')
     ap.add_argument('arguments', nargs='*', metavar='ARG')
