@@ -85,7 +85,7 @@ def main():
     ap.add_argument('-m', type=int, default=100, metavar='N', help='set memory limit to N mebibytes (default: 100 MiB)')
     ap.add_argument('-G', '--no-gdb', dest='gdb', action='store_false', help="don\'t use GDB")
     ap.add_argument('command', metavar='COMMAND')
-    ap.add_argument('arguments', nargs='*', metavar='ARG')
+    ap.add_argument('arguments', nargs=argparse.REMAINDER, metavar='ARG')
     options = ap.parse_args()
     mem_limit = options.m << 20
     resource.setrlimit(RLIMIT_AS, [mem_limit, mem_limit])
