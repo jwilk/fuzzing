@@ -23,16 +23,16 @@
        n = strchr(++oldn, '/');
 --- a/src/lib/image.c
 +++ b/src/lib/image.c
-@@ -713,7 +713,7 @@
+@@ -613,7 +613,7 @@
     free(l);
  }
  
--void
+-static void
 +__EXPORT__ void
  __imlib_RescanLoaders(void)
  {
     static time_t       last_scan_time = 0;
-@@ -1003,8 +1003,10 @@
+@@ -903,8 +903,10 @@
          im->key = __imlib_FileKey(file);
       }
     im->moddate = __imlib_FileModDate(file);
@@ -43,7 +43,7 @@
     /* take a guess by extension on the best loader to use */
     best_loader = __imlib_FindBestLoaderForFile(im->real_file, 0);
     errno = 0;
-@@ -1237,8 +1239,10 @@
+@@ -1137,8 +1139,10 @@
             *er = IMLIB_LOAD_ERROR_FILE_DOES_NOT_EXIST;
          return;
       }
