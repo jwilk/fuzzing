@@ -135,7 +135,6 @@ static char * encodings[] = {
     "viscii"
 };
 
-
 static void print_perl_string(const char *s)
 {
     putchar('"');
@@ -151,7 +150,7 @@ static void print_perl_string(const char *s)
     putchar('"');
 }
 
-EXTERN_C void boot_DynaLoader (pTHX_ CV* cv);
+EXTERN_C void boot_DynaLoader(pTHX_ CV* cv);
 
 EXTERN_C void xs_init(pTHX)
 {
