@@ -17,7 +17,7 @@ sub usage
 {
     my $prog = $PROGRAM_NAME;
     $prog =~ s{.*/}{};
-    print {*STDERR} "Usage: $prog -o <syncdir> [-S <ident>] <testcase>...\n";
+    print {*STDERR} "Usage: $prog [-m] -o <syncdir> [-S <ident>] <testcase>...\n";
     exit 1;
 }
 
