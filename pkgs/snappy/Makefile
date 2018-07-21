@@ -1,4 +1,4 @@
-CFLAGS = -O2 -g
+CXXFLAGS = -O2 -g
 LDLIBS = -lsnappy
 
 .PHONY: all
