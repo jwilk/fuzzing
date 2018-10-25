@@ -42,7 +42,7 @@ do
     then
         rm -rf "$tmpdir"
         printf 'afl-varcheck: variable behavior detected\n' >&2
-        kill -ABRT $$
+        kill -s ABRT $$
     fi
     i=$((i + 1))
 done
