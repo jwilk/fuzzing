@@ -1,4 +1,4 @@
-# Copyright © 2017 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2017-2018 Jakub Wilk <jwilk@jwilk.net>
 # SPDX-License-Identifier: MIT
 
 CC = afl-clang-fast
