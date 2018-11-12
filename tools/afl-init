@@ -26,6 +26,7 @@ shift $((OPTIND-1))
 [ -n "$indir" ] || usage
 [ -n "$syncdir" ] || usage
 
+mkdir -p "$syncdir"
 for node in "$@"
 do
     mkdir "$syncdir/$node"
