@@ -7,7 +7,6 @@ use strict;
 use warnings;
 
 use List::Util qw(shuffle);
-use Data::Dumper;
 use Encode qw();
 
 my @unicode = map { chr } (0x0080 .. 0xFFFB);
