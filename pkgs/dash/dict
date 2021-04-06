@@ -46,6 +46,6 @@
 " shift 1 "
 " unset N "
 " while list; do list; done "
-" kill -ABRT $$ "
+" kill -s ABRT $$ "
 "{ L; }"
 "||"

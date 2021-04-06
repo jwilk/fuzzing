@@ -47,6 +47,6 @@ Valgrind + afl-tmin/afl-cmin::
 
 afl-tmin for timeouts::
 
-   afl-tmin <options> -- sh -c 'timeout 0.5s <command>; [ $? -eq 124 ] && kill -ALRM $$'
+   afl-tmin <options> -- sh -c 'timeout 0.5s <command>; [ $? -eq 124 ] && kill -s ALRM $$'
 
 .. vim:ts=3 sts=3 sw=3 et ft=rst
