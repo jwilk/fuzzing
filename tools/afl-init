@@ -5,7 +5,7 @@
 
 set -e -u
 
-usage()
+bad_usage()
 {
     printf 'Usage: %s -i IN-DIR -o SYNC-DIR IDENT...\n' "${0##*/}" >&2
     exit 1
@@ -22,9 +22,9 @@ do
     esac
 done
 shift $((OPTIND-1))
-[ $# -ne 0 ] || usage
-[ -n "$indir" ] || usage
-[ -n "$syncdir" ] || usage
+[ $# -ne 0 ] || bad_usage
+[ -n "$indir" ] || bad_usage
+[ -n "$syncdir" ] || bad_usage
 
 mkdir -p "$syncdir"
 for node in "$@"
