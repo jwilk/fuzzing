@@ -12,7 +12,7 @@ Work-around for: https://bugs.debian.org/879596
      queue_signals();
 -    pid = fork();
 +    if (isset(EXECOPT))
-+    	pid = fork();
++	pid = fork();
 +    else {
 +	pid = -1;
 +	errno = EACCES;
