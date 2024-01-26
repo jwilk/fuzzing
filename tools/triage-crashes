@@ -11,7 +11,7 @@ import resource
 import shlex
 import subprocess as ipc
 
-lambda: (yield from [])  # Python >= 3.3 is required
+rb''  # Python >= 3.3 is required
 
 try:
     RLIMIT_AS = resource.RLIMIT_AS
