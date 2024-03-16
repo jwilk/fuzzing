@@ -31,15 +31,11 @@ def quote_args(args, atat=None):
 def run_gdb(options, path):
     if '@@' in options.arguments:
         target_args = quote_args(options.arguments, path)
-        gdb_run_command = 'run {args} < /dev/null > /dev/null 2> /dev/null'.format(
-            args=target_args
-        )
+        gdb_run_command = f'run {target_args} < /dev/null > /dev/null 2> /dev/null'
     else:
         target_args = quote_args(options.arguments)
-        gdb_run_command = 'run {args} < {path} > /dev/null 2> /dev/null'.format(
-            args=target_args,
-            path=shlex.quote(path)
-        )
+        qpath = shlex.quote(path)
+        gdb_run_command = f'run {target_args} < {qpath} > /dev/null 2> /dev/null'
     gdb_cmdline = ['gdb', '--batch', '--quiet',
         '--ex', gdb_run_command,
         '--ex', 'backtrace',
