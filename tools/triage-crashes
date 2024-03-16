@@ -24,7 +24,7 @@ def quote_args(args, atat=None):
             x if x != '@@' else atat
             for x in args
         )
-    return ' '.join(
+    return str.join(' ',
         map(shlex.quote, args)
     )
 
