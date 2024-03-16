@@ -11,7 +11,7 @@ import resource
 import shlex
 import subprocess as ipc
 
-rb''  # Python >= 3.3 is required
+0_0  # Python >= 3.6 is required
 
 try:
     RLIMIT_AS = resource.RLIMIT_AS
